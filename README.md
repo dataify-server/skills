@@ -262,4 +262,4 @@ This project is licensed under the [MIT License](LICENSE).
 ## Links
 
 - [Dataify Dashboard](https://dashboard.dataify.com?utm_source=github)
-- [API Documentation](https://docs.dataify.com?utm_source=github)
+- [API Documentation](https://doc.dataify.com?utm_source=github)
