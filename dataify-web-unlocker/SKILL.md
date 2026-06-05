@@ -1,6 +1,6 @@
 ---
 name: "dataify-web-unlocker"
-description: "Unlock or fetch difficult web pages through the Dataify Web Unlocker API. Use  when needs to retrieve HTML or rendered content from sites that may block normal requests, when a user asks to use Dataify's web unlocker endpoint, or when a page needs JavaScript rendering, redirect handling, country selection, or request-level headers and cookies."
+description: "Fetch blocked and dynamic web content via Dataify Web Unlocker API. Automatically identify and bypass CAPTCHA challenges, execute full-page JavaScript rendering, and return complete raw HTML source code or PNG webpage screenshots. Applicable for complex crawling scenarios including dynamic loading pages and SPA single-page applications."
 ---
 
 # Dataify Web Unlocker

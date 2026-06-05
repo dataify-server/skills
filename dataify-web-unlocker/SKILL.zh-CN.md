@@ -1,3 +1,8 @@
+---
+name: "dataify-web-unlocker"
+description: "依托Dataify网页解锁API抓取受限网页，输入任意URL即可智能识别破解验证码、全自动JS页面渲染，支持返回完整网页HTML源码或PNG全屏截图，适配动态网页、SPA单页应用等各类高难度数据采集场景。"
+---
+
 # Dataify Web Unlocker 中文版
 
 这个 skill 用于通过 Dataify Web Unlocker API 抓取或解锁网页内容。
@@ -10,7 +15,7 @@
 4. `url` 是唯一必须先确认的参数；如果用户没有明确给出目标地址，不要猜。
 5. 其余参数都视为可选覆盖项；除非用户明确要求，否则保持默认值。
 6. 脚本会从环境变量中读取 `DATAIFY_API_TOKEN`。
-7. 如果缺少 token，提示用户前往 <a href="https://dashboard.dataify.com?utm_source=skill">dataify&#23448;&#32593;</a> 获取 `DATAIFY_API_TOKEN`。
+7. 如果缺少 token，提示用户前往 [Dataify Dashboard](https://dashboard.dataify.com?utm_source=skill) 获取 `DATAIFY_API_TOKEN`。
 8. 除非用户要求额外处理，否则直接返回接口响应内容。
 
 ## 设置 DATAIFY_API_TOKEN
