@@ -22,7 +22,7 @@ This plugin integrates [Dataify](https://dashboard.dataify.com?utm_source=github
 - **Perform competitive intelligence** — real-time competitor analysis, price monitoring, review mining, and market landscape mapping
 - **Download media files** — YouTube video and audio downloads with transcript extraction
 
-Built on Dataify's [Web Unlocker](https://docs.dataify.com/web-unlocker?utm_source=github), [SERP API](https://docs.dataify.com/serp-api?utm_source=github), and [Web Data API](https://docs.dataify.com/web-data-api?utm_source=github), handling complex web access so your AI agents can focus on what matters.
+Built on Dataify's [Web Unlocker](https://doc.dataify.com/web-unlocker?utm_source=github), [SERP API](https://doc.dataify.com/serp-api?utm_source=github), and [Web Data API](https://doc.dataify.com/web-data-api?utm_source=github), handling complex web access so your AI agents can focus on what matters.
 
 ## Quick Start
 
@@ -83,7 +83,7 @@ For browsing available capabilities and finding the right skill for your task.
 
 For no-install, direct API integration — call Dataify APIs directly.
 
-> Visit [API Documentation](https://docs.dataify.com?utm_source=github)
+> Visit [API Documentation](https://doc.dataify.com?utm_source=github)
 
 ## MCP Server
 
@@ -111,7 +111,31 @@ https://mcp.dataify.com/mcp?token=YOUR_API_TOKEN&tools=TOOL_LIST
 | **Developer** | `github`, `google_play_store` | Repository info, app store reviews |
 | **Real Estate** | `zillow` | Property listings and data |
 
-### Configure in Claude Desktop
+### One-line Setup (Recommended)
+
+```bash
+curl -fsSL https://raw.githubusercontent.com/dataify-server/skills/main/setup-mcp.sh | bash
+```
+
+The script will:
+1. Prompt for your API token
+2. Let you choose a tool preset (All / Lightweight / Social Media / E-Commerce / Research / Custom)
+3. Auto-detect your AI client (Claude Desktop / Cursor / Windsurf)
+4. Write the MCP config automatically
+
+You can also pass arguments directly:
+
+```bash
+# Specify token and client
+bash setup-mcp.sh --token YOUR_TOKEN --client claude
+
+# Load only specific tools
+bash setup-mcp.sh --token YOUR_TOKEN --tools "google_serp,amazon,youtube"
+```
+
+### Manual Setup
+
+#### Configure in Claude Desktop
 
 Add to your `claude_desktop_config.json`:
 
@@ -125,7 +149,7 @@ Add to your `claude_desktop_config.json`:
 }
 ```
 
-### Configure in Cursor / Windsurf
+#### Configure in Cursor / Windsurf
 
 Go to **Settings > MCP**, click **Add new MCP server**, select type **sse**, and enter the URL above.
 
@@ -675,5 +699,5 @@ This project is licensed under the [MIT License](LICENSE).
 ## Links
 
 - [Dataify Dashboard](https://dashboard.dataify.com?utm_source=github) — Get your API token
-- [API Documentation](https://docs.dataify.com?utm_source=github) — Full API reference
+- [API Documentation](https://doc.dataify.com?utm_source=github) — Full API reference
 - [MCP Server](https://mcp.dataify.com) — Model Context Protocol endpoint for AI agents
