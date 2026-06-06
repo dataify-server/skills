@@ -46,15 +46,15 @@ Get your API token at [Dataify Dashboard](https://dashboard.dataify.com?utm_sour
 
 ```bash
 # Search Google
-python3 serp-google-search/scripts/google_search.py \
+python3 skills/serp-google-search/scripts/google_search.py \
   --params-json '{"q":"AI news"}'
 
 # Unlock any web page
-python3 dataify-web-unlocker/scripts/invoke-dataify-web-unlocker.py \
+python3 skills/dataify-web-unlocker/scripts/invoke-dataify-web-unlocker.py \
   --url "https://example.com"
 
 # Collect Amazon products
-python3 scraper-amazon-product/scripts/submit_amazon_product.py --help
+python3 skills/scraper-amazon-product/scripts/submit_amazon_product.py --help
 ```
 
 ## Agent Onboarding
@@ -254,15 +254,15 @@ Combine multiple skills to build a comprehensive competitor profile:
 
 ```bash
 # 1. Search for competitor information
-python3 serp-google-search/scripts/google_search.py \
+python3 skills/serp-google-search/scripts/google_search.py \
   --params-json '{"q":"competitor_name site:crunchbase.com OR site:linkedin.com"}'
 
 # 2. Scrape their website for positioning and pricing
-python3 dataify-web-unlocker/scripts/invoke-dataify-web-unlocker.py \
+python3 skills/dataify-web-unlocker/scripts/invoke-dataify-web-unlocker.py \
   --url "https://competitor.com/pricing"
 
 # 3. Collect their product reviews on Amazon
-python3 scraper-amazon-comment/scripts/submit_amazon_comment.py \
+python3 skills/scraper-amazon-comment/scripts/submit_amazon_comment.py \
   --asin "B0XXXXXXXX"
 ```
 
@@ -306,7 +306,7 @@ Agent workflow:
 
 | Skill | Description |
 |-------|-------------|
-| [dataify-web-unlocker](dataify-web-unlocker/) | Fetch any web page as clean content, bypassing bot detection, CAPTCHAs, and JavaScript rendering |
+| [dataify-web-unlocker](skills/dataify-web-unlocker/) | Fetch any web page as clean content, bypassing bot detection, CAPTCHAs, and JavaScript rendering |
 
 ### SERP Skills
 
@@ -316,41 +316,41 @@ Structured search engine results across 25 verticals.
 
 | Skill | Description |
 |-------|-------------|
-| [serp-google-search](serp-google-search/) | Google web search results |
-| [serp-google-ai-mode](serp-google-ai-mode/) | Google AI Mode search results |
-| [serp-google-images](serp-google-images/) | Google Images search |
-| [serp-google-videos](serp-google-videos/) | Google Videos search |
-| [serp-google-news](serp-google-news/) | Google News search |
-| [serp-google-maps](serp-google-maps/) | Google Maps search |
-| [serp-google-shopping](serp-google-shopping/) | Google Shopping search and price comparison |
-| [serp-google-scholar](serp-google-scholar/) | Google Scholar academic paper search |
-| [serp-google-finance](serp-google-finance/) | Google Finance financial data |
-| [serp-google-flights](serp-google-flights/) | Google Flights price and itinerary search |
-| [serp-google-hotels](serp-google-hotels/) | Google Hotels price and availability search |
-| [serp-google-jobs](serp-google-jobs/) | Google Jobs search |
-| [serp-google-lens](serp-google-lens/) | Google Lens image search |
-| [serp-google-local](serp-google-local/) | Google Local / nearby place search |
-| [serp-google-patents](serp-google-patents/) | Google Patents search |
-| [serp-google-play](serp-google-play/) | Google Play app store search |
-| [serp-google-trends](serp-google-trends/) | Google Trends data |
+| [serp-google-search](skills/serp-google-search/) | Google web search results |
+| [serp-google-ai-mode](skills/serp-google-ai-mode/) | Google AI Mode search results |
+| [serp-google-images](skills/serp-google-images/) | Google Images search |
+| [serp-google-videos](skills/serp-google-videos/) | Google Videos search |
+| [serp-google-news](skills/serp-google-news/) | Google News search |
+| [serp-google-maps](skills/serp-google-maps/) | Google Maps search |
+| [serp-google-shopping](skills/serp-google-shopping/) | Google Shopping search and price comparison |
+| [serp-google-scholar](skills/serp-google-scholar/) | Google Scholar academic paper search |
+| [serp-google-finance](skills/serp-google-finance/) | Google Finance financial data |
+| [serp-google-flights](skills/serp-google-flights/) | Google Flights price and itinerary search |
+| [serp-google-hotels](skills/serp-google-hotels/) | Google Hotels price and availability search |
+| [serp-google-jobs](skills/serp-google-jobs/) | Google Jobs search |
+| [serp-google-lens](skills/serp-google-lens/) | Google Lens image search |
+| [serp-google-local](skills/serp-google-local/) | Google Local / nearby place search |
+| [serp-google-patents](skills/serp-google-patents/) | Google Patents search |
+| [serp-google-play](skills/serp-google-play/) | Google Play app store search |
+| [serp-google-trends](skills/serp-google-trends/) | Google Trends data |
 
 #### Bing (6)
 
 | Skill | Description |
 |-------|-------------|
-| [serp-bing-search](serp-bing-search/) | Bing web search |
-| [serp-bing-images](serp-bing-images/) | Bing image search |
-| [serp-bing-videos](serp-bing-videos/) | Bing video search |
-| [serp-bing-news](serp-bing-news/) | Bing news search |
-| [serp-bing-shopping](serp-bing-shopping/) | Bing shopping and product search |
-| [serp-bing-maps](serp-bing-maps/) | Bing Maps location search |
+| [serp-bing-search](skills/serp-bing-search/) | Bing web search |
+| [serp-bing-images](skills/serp-bing-images/) | Bing image search |
+| [serp-bing-videos](skills/serp-bing-videos/) | Bing video search |
+| [serp-bing-news](skills/serp-bing-news/) | Bing news search |
+| [serp-bing-shopping](skills/serp-bing-shopping/) | Bing shopping and product search |
+| [serp-bing-maps](skills/serp-bing-maps/) | Bing Maps location search |
 
 #### Others (2)
 
 | Skill | Description |
 |-------|-------------|
-| [serp-duckduckgo-search](serp-duckduckgo-search/) | DuckDuckGo web search |
-| [serp-yandex-search](serp-yandex-search/) | Yandex web search |
+| [serp-duckduckgo-search](skills/serp-duckduckgo-search/) | DuckDuckGo web search |
+| [serp-yandex-search](skills/serp-yandex-search/) | Yandex web search |
 
 ### Scraper Skills (37)
 
@@ -360,103 +360,103 @@ Structured data extraction from 20+ platforms via async task management.
 
 | Skill | Description |
 |-------|-------------|
-| [scraper-amazon-product](scraper-amazon-product/) | Collect Amazon products by ASIN, URL, keyword, category, or Best Sellers |
-| [scraper-amazon-comment](scraper-amazon-comment/) | Collect Amazon product reviews |
-| [scraper-amazon-global-product](scraper-amazon-global-product/) | Collect Amazon global product information |
-| [scraper-amazon-product-list](scraper-amazon-product-list/) | Collect Amazon product listings |
-| [scraper-amazon-seller](scraper-amazon-seller/) | Collect Amazon seller information |
+| [scraper-amazon-product](skills/scraper-amazon-product/) | Collect Amazon products by ASIN, URL, keyword, category, or Best Sellers |
+| [scraper-amazon-comment](skills/scraper-amazon-comment/) | Collect Amazon product reviews |
+| [scraper-amazon-global-product](skills/scraper-amazon-global-product/) | Collect Amazon global product information |
+| [scraper-amazon-product-list](skills/scraper-amazon-product-list/) | Collect Amazon product listings |
+| [scraper-amazon-seller](skills/scraper-amazon-seller/) | Collect Amazon seller information |
 
 #### YouTube (7)
 
 | Skill | Description |
 |-------|-------------|
-| [scraper-youtube-video-post](scraper-youtube-video-post/) | Collect YouTube videos by URL, keyword, hashtag, or Explore |
-| [scraper-youtube-product-by-id](scraper-youtube-product-by-id/) | Collect YouTube video basic information by video ID |
-| [scraper-youtube-comment-by-id](scraper-youtube-comment-by-id/) | Collect YouTube comments by video ID |
-| [scraper-youtube-profiles](scraper-youtube-profiles/) | Collect YouTube channel profiles by URL or keyword |
-| [scraper-youtube-transcript-by-id](scraper-youtube-transcript-by-id/) | Extract YouTube video subtitles/transcripts by video ID |
-| [scraper-youtube-video-by-url](scraper-youtube-video-by-url/) | Download YouTube video files by URL |
-| [scraper-youtube-audio-by-url](scraper-youtube-audio-by-url/) | Download YouTube audio files by URL |
+| [scraper-youtube-video-post](skills/scraper-youtube-video-post/) | Collect YouTube videos by URL, keyword, hashtag, or Explore |
+| [scraper-youtube-product-by-id](skills/scraper-youtube-product-by-id/) | Collect YouTube video basic information by video ID |
+| [scraper-youtube-comment-by-id](skills/scraper-youtube-comment-by-id/) | Collect YouTube comments by video ID |
+| [scraper-youtube-profiles](skills/scraper-youtube-profiles/) | Collect YouTube channel profiles by URL or keyword |
+| [scraper-youtube-transcript-by-id](skills/scraper-youtube-transcript-by-id/) | Extract YouTube video subtitles/transcripts by video ID |
+| [scraper-youtube-video-by-url](skills/scraper-youtube-video-by-url/) | Download YouTube video files by URL |
+| [scraper-youtube-audio-by-url](skills/scraper-youtube-audio-by-url/) | Download YouTube audio files by URL |
 
 #### Facebook (4)
 
 | Skill | Description |
 |-------|-------------|
-| [scraper-facebook-post-by-url](scraper-facebook-post-by-url/) | Collect Facebook posts by URL |
-| [scraper-facebook-comment-by-url](scraper-facebook-comment-by-url/) | Collect Facebook post comments by URL |
-| [scraper-facebook-profile-by-url](scraper-facebook-profile-by-url/) | Collect Facebook profiles by URL |
-| [scraper-facebook-events](scraper-facebook-events/) | Collect Facebook events |
+| [scraper-facebook-post-by-url](skills/scraper-facebook-post-by-url/) | Collect Facebook posts by URL |
+| [scraper-facebook-comment-by-url](skills/scraper-facebook-comment-by-url/) | Collect Facebook post comments by URL |
+| [scraper-facebook-profile-by-url](skills/scraper-facebook-profile-by-url/) | Collect Facebook profiles by URL |
+| [scraper-facebook-events](skills/scraper-facebook-events/) | Collect Facebook events |
 
 #### Instagram (3)
 
 | Skill | Description |
 |-------|-------------|
-| [scraper-instagram-profiles](scraper-instagram-profiles/) | Collect Instagram profiles by URL or keyword |
-| [scraper-instagram-comment-by-posturl](scraper-instagram-comment-by-posturl/) | Collect Instagram post comments by URL |
-| [scraper-instagram-reels](scraper-instagram-reels/) | Collect Instagram Reels information |
+| [scraper-instagram-profiles](skills/scraper-instagram-profiles/) | Collect Instagram profiles by URL or keyword |
+| [scraper-instagram-comment-by-posturl](skills/scraper-instagram-comment-by-posturl/) | Collect Instagram post comments by URL |
+| [scraper-instagram-reels](skills/scraper-instagram-reels/) | Collect Instagram Reels information |
 
 #### Google Maps & Shopping (3)
 
 | Skill | Description |
 |-------|-------------|
-| [scraper-google-map-details](scraper-google-map-details/) | Collect Google Maps place details |
-| [scraper-google-maps-reviews](scraper-google-maps-reviews/) | Collect Google Maps reviews |
-| [scraper-google-shopping-keywords](scraper-google-shopping-keywords/) | Collect Google Shopping products by keyword |
+| [scraper-google-map-details](skills/scraper-google-map-details/) | Collect Google Maps place details |
+| [scraper-google-maps-reviews](skills/scraper-google-maps-reviews/) | Collect Google Maps reviews |
+| [scraper-google-shopping-keywords](skills/scraper-google-shopping-keywords/) | Collect Google Shopping products by keyword |
 
 #### Reddit (2)
 
 | Skill | Description |
 |-------|-------------|
-| [scraper-reddit-posts](scraper-reddit-posts/) | Collect Reddit posts by URL, keyword, or subreddit |
-| [scraper-reddit-comment-by-url](scraper-reddit-comment-by-url/) | Collect Reddit post comments by URL |
+| [scraper-reddit-posts](skills/scraper-reddit-posts/) | Collect Reddit posts by URL, keyword, or subreddit |
+| [scraper-reddit-comment-by-url](skills/scraper-reddit-comment-by-url/) | Collect Reddit post comments by URL |
 
 #### Indeed (2)
 
 | Skill | Description |
 |-------|-------------|
-| [scraper-indeed-job-listings](scraper-indeed-job-listings/) | Collect Indeed job listings |
-| [scraper-indeed-companies-info](scraper-indeed-companies-info/) | Collect Indeed company information |
+| [scraper-indeed-job-listings](skills/scraper-indeed-job-listings/) | Collect Indeed job listings |
+| [scraper-indeed-companies-info](skills/scraper-indeed-companies-info/) | Collect Indeed company information |
 
 #### E-commerce (2)
 
 | Skill | Description |
 |-------|-------------|
-| [scraper-ebay-products](scraper-ebay-products/) | Collect eBay product information |
-| [scraper-walmart-products](scraper-walmart-products/) | Collect Walmart product information |
+| [scraper-ebay-products](skills/scraper-ebay-products/) | Collect eBay product information |
+| [scraper-walmart-products](skills/scraper-walmart-products/) | Collect Walmart product information |
 
 #### Travel (1)
 
 | Skill | Description |
 |-------|-------------|
-| [scraper-booking-hotellist](scraper-booking-hotellist/) | Collect Booking.com hotel information |
+| [scraper-booking-hotellist](skills/scraper-booking-hotellist/) | Collect Booking.com hotel information |
 
 #### Business & Jobs (3)
 
 | Skill | Description |
 |-------|-------------|
-| [scraper-crunchbase-company-by-url](scraper-crunchbase-company-by-url/) | Scrape Crunchbase company profiles by URL |
-| [scraper-glassdoor-company-by-url](scraper-glassdoor-company-by-url/) | Scrape Glassdoor company profiles by URL |
-| [scraper-linkedin-company-information-by-url](scraper-linkedin-company-information-by-url/) | Scrape LinkedIn company information by URL |
+| [scraper-crunchbase-company-by-url](skills/scraper-crunchbase-company-by-url/) | Scrape Crunchbase company profiles by URL |
+| [scraper-glassdoor-company-by-url](skills/scraper-glassdoor-company-by-url/) | Scrape Glassdoor company profiles by URL |
+| [scraper-linkedin-company-information-by-url](skills/scraper-linkedin-company-information-by-url/) | Scrape LinkedIn company information by URL |
 
 #### Social Media (2)
 
 | Skill | Description |
 |-------|-------------|
-| [scraper-tiktok-comment-by-url](scraper-tiktok-comment-by-url/) | Scrape TikTok comments by URL |
-| [scraper-twitter-profile-by-profileurl](scraper-twitter-profile-by-profileurl/) | Scrape X (Twitter) profiles by URL |
+| [scraper-tiktok-comment-by-url](skills/scraper-tiktok-comment-by-url/) | Scrape TikTok comments by URL |
+| [scraper-twitter-profile-by-profileurl](skills/scraper-twitter-profile-by-profileurl/) | Scrape X (Twitter) profiles by URL |
 
 #### Developer & Apps (2)
 
 | Skill | Description |
 |-------|-------------|
-| [scraper-github-repository-by-repo-url](scraper-github-repository-by-repo-url/) | Scrape GitHub repository information by URL |
-| [scraper-google-play-store-reviews-by-url](scraper-google-play-store-reviews-by-url/) | Scrape Google Play Store reviews by URL |
+| [scraper-github-repository-by-repo-url](skills/scraper-github-repository-by-repo-url/) | Scrape GitHub repository information by URL |
+| [scraper-google-play-store-reviews-by-url](skills/scraper-google-play-store-reviews-by-url/) | Scrape Google Play Store reviews by URL |
 
 #### Real Estate (1)
 
 | Skill | Description |
 |-------|-------------|
-| [scraper-airbnb-product-by-searchurl](scraper-airbnb-product-by-searchurl/) | Scrape Airbnb property listings by search URL |
+| [scraper-airbnb-product-by-searchurl](skills/scraper-airbnb-product-by-searchurl/) | Scrape Airbnb property listings by search URL |
 
 ## Best Practices
 
@@ -466,7 +466,7 @@ Use the Web Unlocker for any URL that isn't covered by a dedicated skill:
 
 ```python
 # Scrape any webpage as clean content
-python3 dataify-web-unlocker/scripts/invoke-dataify-web-unlocker.py \
+python3 skills/dataify-web-unlocker/scripts/invoke-dataify-web-unlocker.py \
   --url "https://example.com/page"
 ```
 
@@ -481,7 +481,7 @@ Use SERP skills for search engine results with structured JSON output:
 
 ```python
 # Google search with location targeting
-python3 serp-google-search/scripts/google_search.py \
+python3 skills/serp-google-search/scripts/google_search.py \
   --params-json '{"q":"AI trends","gl":"us","hl":"en","num":20}'
 ```
 
@@ -496,7 +496,7 @@ Use Scraper skills for structured data extraction with async task management:
 
 ```python
 # Submit a batch task, then poll for results
-python3 scraper-amazon-product/scripts/submit_amazon_product.py \
+python3 skills/scraper-amazon-product/scripts/submit_amazon_product.py \
   --keyword "wireless headphones" --count 100
 ```
 
@@ -558,72 +558,74 @@ dataify_skills/
 ├── CONTRIBUTING.md
 ├── LICENSE
 ├── install.sh
+├── setup-mcp.sh
 │
-├── dataify-web-unlocker/                          # Web Unlocker
-│
-├── serp-google-search/                            # SERP — Google (17 verticals)
-├── serp-google-ai-mode/
-├── serp-google-images/
-├── serp-google-videos/
-├── serp-google-news/
-├── serp-google-maps/
-├── serp-google-shopping/
-├── serp-google-scholar/
-├── serp-google-finance/
-├── serp-google-flights/
-├── serp-google-hotels/
-├── serp-google-jobs/
-├── serp-google-lens/
-├── serp-google-local/
-├── serp-google-patents/
-├── serp-google-play/
-├── serp-google-trends/
-├── serp-bing-search/                              # SERP — Bing (6 verticals)
-├── serp-bing-images/
-├── serp-bing-videos/
-├── serp-bing-news/
-├── serp-bing-shopping/
-├── serp-bing-maps/
-├── serp-duckduckgo-search/                        # SERP — DuckDuckGo
-├── serp-yandex-search/                            # SERP — Yandex
-│
-├── scraper-amazon-product/                        # Scraper — Amazon (5)
-├── scraper-amazon-comment/
-├── scraper-amazon-global-product/
-├── scraper-amazon-product-list/
-├── scraper-amazon-seller/
-├── scraper-youtube-video-post/                    # Scraper — YouTube (7)
-├── scraper-youtube-product-by-id/
-├── scraper-youtube-comment-by-id/
-├── scraper-youtube-profiles/
-├── scraper-youtube-transcript-by-id/
-├── scraper-youtube-video-by-url/
-├── scraper-youtube-audio-by-url/
-├── scraper-facebook-post-by-url/                  # Scraper — Facebook (4)
-├── scraper-facebook-comment-by-url/
-├── scraper-facebook-profile-by-url/
-├── scraper-facebook-events/
-├── scraper-instagram-profiles/                    # Scraper — Instagram (3)
-├── scraper-instagram-comment-by-posturl/
-├── scraper-instagram-reels/
-├── scraper-google-map-details/                    # Scraper — Google Maps & Shopping (3)
-├── scraper-google-maps-reviews/
-├── scraper-google-shopping-keywords/
-├── scraper-reddit-posts/                          # Scraper — Reddit (2)
-├── scraper-reddit-comment-by-url/
-├── scraper-indeed-job-listings/                   # Scraper — Indeed (2)
-├── scraper-indeed-companies-info/
-├── scraper-ebay-products/                         # Scraper — eBay (1)
-├── scraper-walmart-products/                      # Scraper — Walmart (1)
-├── scraper-booking-hotellist/                     # Scraper — Booking.com (1)
-├── scraper-crunchbase-company-by-url/             # Scraper — Business & Jobs (3)
-├── scraper-glassdoor-company-by-url/
-├── scraper-linkedin-company-information-by-url/
-├── scraper-tiktok-comment-by-url/                 # Scraper — Social Media (2)
-├── scraper-twitter-profile-by-profileurl/
-├── scraper-github-repository-by-repo-url/         # Scraper — Developer & Apps (2)
-├── scraper-google-play-store-reviews-by-url/
-└── scraper-airbnb-product-by-searchurl/           # Scraper — Real Estate (1)
+└── skills/
+    ├── dataify-web-unlocker/                          # Web Unlocker
+    │
+    ├── serp-google-search/                            # SERP — Google (17 verticals)
+    ├── serp-google-ai-mode/
+    ├── serp-google-images/
+    ├── serp-google-videos/
+    ├── serp-google-news/
+    ├── serp-google-maps/
+    ├── serp-google-shopping/
+    ├── serp-google-scholar/
+    ├── serp-google-finance/
+    ├── serp-google-flights/
+    ├── serp-google-hotels/
+    ├── serp-google-jobs/
+    ├── serp-google-lens/
+    ├── serp-google-local/
+    ├── serp-google-patents/
+    ├── serp-google-play/
+    ├── serp-google-trends/
+    ├── serp-bing-search/                              # SERP — Bing (6 verticals)
+    ├── serp-bing-images/
+    ├── serp-bing-videos/
+    ├── serp-bing-news/
+    ├── serp-bing-shopping/
+    ├── serp-bing-maps/
+    ├── serp-duckduckgo-search/                        # SERP — DuckDuckGo
+    ├── serp-yandex-search/                            # SERP — Yandex
+    │
+    ├── scraper-amazon-product/                        # Scraper — Amazon (5)
+    ├── scraper-amazon-comment/
+    ├── scraper-amazon-global-product/
+    ├── scraper-amazon-product-list/
+    ├── scraper-amazon-seller/
+    ├── scraper-youtube-video-post/                    # Scraper — YouTube (7)
+    ├── scraper-youtube-product-by-id/
+    ├── scraper-youtube-comment-by-id/
+    ├── scraper-youtube-profiles/
+    ├── scraper-youtube-transcript-by-id/
+    ├── scraper-youtube-video-by-url/
+    ├── scraper-youtube-audio-by-url/
+    ├── scraper-facebook-post-by-url/                  # Scraper — Facebook (4)
+    ├── scraper-facebook-comment-by-url/
+    ├── scraper-facebook-profile-by-url/
+    ├── scraper-facebook-events/
+    ├── scraper-instagram-profiles/                    # Scraper — Instagram (3)
+    ├── scraper-instagram-comment-by-posturl/
+    ├── scraper-instagram-reels/
+    ├── scraper-google-map-details/                    # Scraper — Google Maps & Shopping (3)
+    ├── scraper-google-maps-reviews/
+    ├── scraper-google-shopping-keywords/
+    ├── scraper-reddit-posts/                          # Scraper — Reddit (2)
+    ├── scraper-reddit-comment-by-url/
+    ├── scraper-indeed-job-listings/                   # Scraper — Indeed (2)
+    ├── scraper-indeed-companies-info/
+    ├── scraper-ebay-products/                         # Scraper — eBay (1)
+    ├── scraper-walmart-products/                      # Scraper — Walmart (1)
+    ├── scraper-booking-hotellist/                     # Scraper — Booking.com (1)
+    ├── scraper-crunchbase-company-by-url/             # Scraper — Business & Jobs (3)
+    ├── scraper-glassdoor-company-by-url/
+    ├── scraper-linkedin-company-information-by-url/
+    ├── scraper-tiktok-comment-by-url/                 # Scraper — Social Media (2)
+    ├── scraper-twitter-profile-by-profileurl/
+    ├── scraper-github-repository-by-repo-url/         # Scraper — Developer & Apps (2)
+    ├── scraper-google-play-store-reviews-by-url/
+    └── scraper-airbnb-product-by-searchurl/           # Scraper — Real Estate (1)
 ```
 
 ## Examples
@@ -632,13 +634,13 @@ dataify_skills/
 
 ```bash
 # Collect product data from multiple platforms
-python3 scraper-amazon-product/scripts/submit_amazon_product.py \
+python3 skills/scraper-amazon-product/scripts/submit_amazon_product.py \
   --keyword "wireless earbuds"
 
-python3 scraper-ebay-products/scripts/submit_ebay_products.py \
+python3 skills/scraper-ebay-products/scripts/submit_ebay_products.py \
   --keyword "wireless earbuds"
 
-python3 scraper-walmart-products/scripts/submit_walmart_products.py \
+python3 skills/scraper-walmart-products/scripts/submit_walmart_products.py \
   --keyword "wireless earbuds"
 ```
 
@@ -646,13 +648,13 @@ python3 scraper-walmart-products/scripts/submit_walmart_products.py \
 
 ```bash
 # Monitor a brand across social platforms
-python3 scraper-instagram-profiles/scripts/submit_instagram_profiles.py \
+python3 skills/scraper-instagram-profiles/scripts/submit_instagram_profiles.py \
   --url "https://instagram.com/brand_name"
 
-python3 scraper-youtube-profiles/scripts/submit_youtube_profiles.py \
+python3 skills/scraper-youtube-profiles/scripts/submit_youtube_profiles.py \
   --url "https://youtube.com/@brand_name"
 
-python3 scraper-reddit-posts/scripts/submit_reddit_posts.py \
+python3 skills/scraper-reddit-posts/scripts/submit_reddit_posts.py \
   --keyword "brand_name"
 ```
 
@@ -660,10 +662,10 @@ python3 scraper-reddit-posts/scripts/submit_reddit_posts.py \
 
 ```bash
 # Analyze job market for a specific role
-python3 serp-google-jobs/scripts/google_jobs.py \
+python3 skills/serp-google-jobs/scripts/google_jobs.py \
   --params-json '{"q":"senior AI engineer","gl":"us"}'
 
-python3 scraper-indeed-job-listings/scripts/submit_indeed_job_listings.py \
+python3 skills/scraper-indeed-job-listings/scripts/submit_indeed_job_listings.py \
   --keyword "senior AI engineer"
 ```
 
