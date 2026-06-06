@@ -1,4 +1,4 @@
-# Dataify Skills for Claude Code
+# Dataify Skills
 
 **Unlock the web with AI-powered scraping, search, and structured data extraction**
 
@@ -7,12 +7,15 @@
 [![Datasets](https://img.shields.io/badge/Datasets-25+-orange.svg)](#data-sources)
 [![MCP Tools](https://img.shields.io/badge/MCP_Tools-25+-purple.svg)](#mcp-server)
 [![Platforms](https://img.shields.io/badge/Platforms-25+-red.svg)](#skill-catalog)
+[![Claude Code](https://img.shields.io/badge/Claude_Code-supported-blue.svg)](#quick-start)
+[![Codex](https://img.shields.io/badge/Codex-supported-green.svg)](#quick-start)
+[![OpenClaw](https://img.shields.io/badge/OpenClaw-supported-orange.svg)](#quick-start)
 
-[Quick Start](#quick-start) | [Skills](#skill-catalog) | [Agent Onboarding](#agent-onboarding) | [MCP Server](#mcp-server) | [Data Sources](#data-sources) | [Competitive Intelligence](#competitive-intelligence) | [Best Practices](#best-practices) | [Settings](#settings) | [Examples](#examples)
+[Quick Start](#quick-start) | [Installation](#installation) | [Skills](#skill-catalog) | [Agent Onboarding](#agent-onboarding) | [MCP Server](#mcp-server) | [Data Sources](#data-sources) | [Competitive Intelligence](#competitive-intelligence) | [Best Practices](#best-practices) | [Settings](#settings) | [Examples](#examples)
 
 ## Overview
 
-This plugin integrates [Dataify](https://dashboard.dataify.com?utm_source=github)'s powerful web infrastructure directly into Claude Code, enabling AI agents to:
+This plugin integrates [Dataify](https://dashboard.dataify.com?utm_source=github)'s powerful web infrastructure directly into AI coding agents (Claude Code, Codex, OpenClaw), enabling them to:
 
 - **Scrape any webpage as clean Markdown** — bypassing bot detection, CAPTCHAs, and JavaScript rendering
 - **Search Google, Bing, Yandex, DuckDuckGo** with structured JSON results — titles, links, and descriptions ready for processing
@@ -28,11 +31,22 @@ Built on Dataify's [Web Unlocker](https://doc.dataify.com/web-unlocker?utm_sourc
 
 ### 1. Install
 
+**macOS / Linux:**
+
 ```bash
 curl -fsSL https://raw.githubusercontent.com/dataify-server/skills/main/install.sh | bash
 ```
 
-The installer will clone the repo, prompt for your API token, and configure your shell environment.
+**Windows (PowerShell):**
+
+```powershell
+irm https://raw.githubusercontent.com/dataify-server/skills/main/install.ps1 | iex
+```
+
+The installer will:
+1. Clone skills to `~/.dataify/skills/`
+2. Auto-detect installed tools (Claude Code, Codex, OpenClaw)
+3. Install skills into detected tools
 
 ### 2. Set Your API Token
 
@@ -43,6 +57,18 @@ export DATAIFY_API_TOKEN="your-api-token"
 Get your API token at [Dataify Dashboard](https://dashboard.dataify.com?utm_source=github).
 
 ### 3. Try It
+
+**In Claude Code or OpenClaw** — use slash commands directly:
+
+```
+/dataify-serp-google-search
+/dataify-web-unlocker
+/dataify-scraper-amazon-product
+```
+
+**In Codex** — skills are auto-loaded from `~/.codex/AGENTS.md`, just describe your task.
+
+**Via scripts:**
 
 ```bash
 # Search Google
@@ -57,29 +83,88 @@ python3 skills/dataify-web-unlocker/scripts/invoke-dataify-web-unlocker.py \
 python3 skills/scraper-amazon-product/scripts/submit_amazon_product.py --help
 ```
 
+## Installation
+
+### Supported Tools
+
+| Tool | Platform | Install Method | Invoke Method |
+|------|----------|---------------|---------------|
+| **Claude Code** | macOS, Linux, Windows | Symlink to `~/.claude/skills/` | `/dataify-{skill-name}` |
+| **Codex (OpenAI)** | macOS, Linux, Windows | Generate `~/.codex/AGENTS.md` | Auto-loaded as instructions |
+| **OpenClaw** | macOS, Linux, Windows | Symlink to `~/.openclaw/skills/` | `/dataify-{skill-name}` |
+
+### Install Options
+
+```bash
+# Interactive (auto-detect tools)
+bash install.sh
+
+# Install to a specific tool
+bash install.sh --target claude-code
+bash install.sh --target codex
+bash install.sh --target openclaw
+bash install.sh --target all
+
+# Install specific skills only
+bash install.sh --target claude-code --skills "serp-google-search,scraper-amazon-product"
+
+# Install with API token
+bash install.sh --target all --token YOUR_TOKEN
+
+# Uninstall
+bash install.sh --uninstall --target claude-code
+bash install.sh --uninstall --target all
+```
+
+**Windows PowerShell:**
+
+```powershell
+# Interactive
+.\install.ps1
+
+# Install to a specific tool
+.\install.ps1 -Target claude-code
+.\install.ps1 -Target all
+
+# Uninstall
+.\install.ps1 -Uninstall -Target all
+```
+
+### How It Works
+
+- **Claude Code & OpenClaw**: The installer creates symbolic links from each skill directory into the tool's skills folder. Skills appear as slash commands (e.g., `/dataify-serp-google-search`). Updating the repo with `git pull` automatically updates all skills.
+- **Codex**: The installer reads all SKILL.md frontmatter and generates a skill index in `~/.codex/AGENTS.md`. Codex loads this as global instructions, making all skills available to the agent.
+- **MCP Server**: For GUI-based tools (Claude Desktop, Cursor, Windsurf), use `setup-mcp.sh` to configure the MCP endpoint instead. See [MCP Server](#mcp-server).
+
 ## Agent Onboarding
 
 When an AI agent first interacts with Dataify Skills, follow this routing to find the right path:
 
-### Path A: MCP Server (Recommended)
+### Path A: Skills Installer (Recommended)
 
-For AI agents using Claude Desktop, Cursor, Windsurf, or any MCP-compatible client — connect via the MCP Server for the most seamless experience.
+For AI coding agents (Claude Code, Codex, OpenClaw) — install skills directly into your tool with one command.
+
+> Jump to [Installation](#installation)
+
+### Path B: MCP Server
+
+For GUI-based AI clients (Claude Desktop, Cursor, Windsurf) — connect via the MCP Server for tool-based interaction.
 
 > Jump to [MCP Server](#mcp-server)
 
-### Path B: Script Execution
+### Path C: Script Execution
 
 For direct script execution and automation — use the Python scripts in each skill directory.
 
 > Jump to [Quick Start](#quick-start)
 
-### Path C: Skills Reference
+### Path D: Skills Reference
 
 For browsing available capabilities and finding the right skill for your task.
 
 > Jump to [Skill Catalog](#skill-catalog)
 
-### Path D: REST API
+### Path E: REST API
 
 For no-install, direct API integration — call Dataify APIs directly.
 
@@ -526,6 +611,17 @@ python3 skills/scraper-amazon-product/scripts/submit_amazon_product.py \
 | `DATAIFY_API_TOKEN` | Yes | Your Dataify API token ([get one here](https://dashboard.dataify.com?utm_source=github)) |
 | `DATAIFY_SKILLS_DIR` | No | Custom install directory (default: `~/.dataify/skills`) |
 
+### Installed Paths
+
+| Tool | Skills Path | Config File |
+|------|------------|-------------|
+| **Claude Code** | `~/.claude/skills/dataify-*/` | — |
+| **Codex** | — | `~/.codex/AGENTS.md` |
+| **OpenClaw** | `~/.openclaw/skills/dataify-*/` | — |
+| **Claude Desktop** | — | `~/Library/Application Support/Claude/claude_desktop_config.json` |
+| **Cursor** | — | MCP settings |
+| **Windsurf** | — | MCP settings |
+
 ### API Token Resolution
 
 Skills resolve the API token in this order:
@@ -536,14 +632,14 @@ Skills resolve the API token in this order:
 
 ### Skill Structure
 
-Each skill follows a standard layout:
+Each skill follows a standard layout, compatible with Claude Code, Codex, and OpenClaw:
 
 ```
 skill-name/
-├── SKILL.md              # Skill documentation (required)
+├── SKILL.md              # Skill documentation (required, used by Claude Code & OpenClaw)
 ├── SKILL.zh-CN.md        # Chinese documentation (optional)
 ├── agents/
-│   └── openai.yaml       # OpenAI agent configuration
+│   └── openai.yaml       # OpenAI/Codex agent configuration
 ├── scripts/
 │   └── main_script.py    # Execution script
 └── references/
@@ -557,8 +653,9 @@ dataify_skills/
 ├── README.md
 ├── CONTRIBUTING.md
 ├── LICENSE
-├── install.sh
-├── setup-mcp.sh
+├── install.sh              # Universal installer (macOS/Linux)
+├── install.ps1             # Universal installer (Windows PowerShell)
+├── setup-mcp.sh            # MCP Server setup (Claude Desktop/Cursor/Windsurf)
 │
 └── skills/
     ├── dataify-web-unlocker/                          # Web Unlocker
