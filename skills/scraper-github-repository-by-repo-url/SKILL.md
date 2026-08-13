@@ -1,4 +1,4 @@
-﻿---
+---
 name: "dataify-github-repository-by-repo-url"
 description: "Prepare Dataify builder requests for the github.com scraper family rooted at github_repository_by-repo-url. Use  when needs to work with the successful Dataify scraper detail entry for github_repository_by-repo-url, let the user choose one of its available tools, read saved getToolParams options, and generate a scraperapi.dataify.com/builder curl request with DATAIFY_API_TOKEN."
 ---

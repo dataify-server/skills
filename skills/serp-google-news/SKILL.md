@@ -1,4 +1,4 @@
-﻿---
+---
 name: dataify-google-news
 description: When the user requests "call Google News" or "news search/information", or explicitly mentions the news search field, the dataify-google-news skill is triggered.
 ---

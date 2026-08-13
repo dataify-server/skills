@@ -1,4 +1,4 @@
-﻿---
+---
 name: "dataify-glassdoor-company-by-url"
 description: "Prepare Dataify builder requests for the glassdoor.com scraper family rooted at glassdoor_company_by-url. Use  when needs to work with the successful Dataify scraper detail entry for glassdoor_company_by-url, let the user choose one of its available tools, read saved getToolParams options, and generate a scraperapi.dataify.com/builder curl request with DATAIFY_API_TOKEN."
 ---

@@ -1,4 +1,4 @@
-﻿---
+---
 name: dataify-google-shopping
 description: When the user requests "call Google Shopping" or "shopping search/product search/price comparison", or explicitly mentions the shopping search field, the dataify-google-shopping skill is triggered.
 ---

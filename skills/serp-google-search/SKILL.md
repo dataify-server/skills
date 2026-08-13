@@ -1,4 +1,4 @@
-﻿---
+---
 name: dataify-google-search
 description: When the user requests "call Google Search" or "web search/SERP crawling", or explicitly mentions the web search field, the dataify-google-search skill is triggered.
 ---

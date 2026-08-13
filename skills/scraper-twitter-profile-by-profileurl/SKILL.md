@@ -1,4 +1,4 @@
-﻿---
+---
 name: "dataify-twitter-profile-by-profileurl"
 description: "Prepare Dataify builder requests for the x.com scraper family rooted at twitter_profile_by-profileurl. Use  when needs to work with the successful Dataify scraper detail entry for twitter_profile_by-profileurl, let the user choose one of its available tools, read saved getToolParams options, and generate a scraperapi.dataify.com/builder curl request with DATAIFY_API_TOKEN."
 ---

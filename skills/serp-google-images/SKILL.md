@@ -1,4 +1,4 @@
-﻿---
+---
 name: dataify-google-images
 description: When the user requests "call Google Images" or "search Google Images", or explicitly mentions the image to trigger the dataify-google-images skill.
 ---

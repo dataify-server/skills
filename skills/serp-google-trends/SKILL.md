@@ -1,4 +1,4 @@
-﻿---
+---
 name: dataify-google-trends
 description: When the user requests "Call Google Trends" or "Trend Search/Google Trends", or explicitly mentions the trend search field, the dataify-google-trends skill is triggered.
 ---

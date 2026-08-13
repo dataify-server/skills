@@ -1,4 +1,4 @@
-﻿---
+---
 name: dataify-google-patents
 description: When the user requests "call Google Patents" or "patent search", or explicitly mentions the patent search field, the dataify-google-patents skill is triggered.
 ---

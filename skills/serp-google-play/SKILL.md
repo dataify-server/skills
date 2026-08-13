@@ -1,4 +1,4 @@
-﻿---
+---
 name: dataify-google-play
 description: When the user requests "call Google Play" or "app store search/ranking", or explicitly mentions the Google Play search field, the dataify-google-play skill is triggered.
 ---

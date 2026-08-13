@@ -734,10 +734,10 @@ dataify_skills/
 python3 skills/scraper-amazon-product/scripts/submit_amazon_product.py \
   --keyword "wireless earbuds"
 
-python3 skills/scraper-ebay-products/scripts/submit_ebay_products.py \
+python3 skills/scraper-ebay-products/scripts/submit_dataify_ebay_products.py \
   --keyword "wireless earbuds"
 
-python3 skills/scraper-walmart-products/scripts/submit_walmart_products.py \
+python3 skills/scraper-walmart-products/scripts/submit_dataify_walmart_products.py \
   --keyword "wireless earbuds"
 ```
 
@@ -745,13 +745,13 @@ python3 skills/scraper-walmart-products/scripts/submit_walmart_products.py \
 
 ```bash
 # Monitor a brand across social platforms
-python3 skills/scraper-instagram-profiles/scripts/submit_instagram_profiles.py \
+python3 skills/scraper-instagram-profiles/scripts/submit_dataify_instagram_profiles.py \
   --url "https://instagram.com/brand_name"
 
-python3 skills/scraper-youtube-profiles/scripts/submit_youtube_profiles.py \
+python3 skills/scraper-youtube-profiles/scripts/submit_dataify_youtube_profiles.py \
   --url "https://youtube.com/@brand_name"
 
-python3 skills/scraper-reddit-posts/scripts/submit_reddit_posts.py \
+python3 skills/scraper-reddit-posts/scripts/submit_dataify_reddit_posts.py \
   --keyword "brand_name"
 ```
 
@@ -762,7 +762,7 @@ python3 skills/scraper-reddit-posts/scripts/submit_reddit_posts.py \
 python3 skills/serp-google-jobs/scripts/google_jobs.py \
   --params-json '{"q":"senior AI engineer","gl":"us"}'
 
-python3 skills/scraper-indeed-job-listings/scripts/submit_indeed_job_listings.py \
+python3 skills/scraper-indeed-job-listings/scripts/indeed_job_listings.py \
   --keyword "senior AI engineer"
 ```
 

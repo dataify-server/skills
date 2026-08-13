@@ -1,4 +1,4 @@
-﻿---
+---
 name: dataify-google-scholar
 description: When the user requests "call Google Scholar" or "academic search/paper search", or explicitly mentions the academic search field, the dataify-google-scholar skill is triggered.
 ---

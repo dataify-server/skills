@@ -1,4 +1,4 @@
-﻿---
+---
 name: "dataify-google-play-store-reviews-by-url"
 description: "Prepare Dataify builder requests for the play.google.com scraper family rooted at google-play-store_reviews_by-url. Use  when needs to work with the successful Dataify scraper detail entry for google-play-store_reviews_by-url, let the user choose one of its available tools, read saved getToolParams options, and generate a scraperapi.dataify.com/builder curl request with DATAIFY_API_TOKEN."
 ---

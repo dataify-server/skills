@@ -1,4 +1,4 @@
-﻿---
+---
 name: "dataify-airbnb-product-by-searchurl"
 description: "Prepare Dataify builder requests for the airbnb.com scraper family rooted at airbnb_product_by-searchurl. Use  when needs to work with the successful Dataify scraper detail entry for airbnb_product_by-searchurl, let the user choose one of its available tools, read saved getToolParams options, and generate a scraperapi.dataify.com/builder curl request with DATAIFY_API_TOKEN."
 ---

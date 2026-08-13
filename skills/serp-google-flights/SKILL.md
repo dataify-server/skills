@@ -1,4 +1,4 @@
-﻿---
+---
 name: dataify-google-flights
 description: When the user requests "calling Google Flights" or "searching for flight prices/itineraries", or explicitly mentions the flight query field, the dataify-google-flights skill is triggered.
 ---

@@ -1,4 +1,4 @@
-﻿---
+---
 name: dataify-google-maps
 description: When the user requests "call Google Maps" or "map search/location details", or explicitly mentions the map search field, the dataify-google-maps skill is triggered.
 ---

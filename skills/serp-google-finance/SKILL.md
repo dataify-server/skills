@@ -1,4 +1,4 @@
-﻿---
+---
 name: dataify-google-finance
 description: This skill is triggered when the user requests "call Google Finance" or "search Google Finance", or explicitly mentions something related to financial data (stocks, indices, funds, currencies, futures)
 ---

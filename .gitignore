@@ -1,0 +1,17 @@
+# macOS
+.DS_Store
+
+# Local editor / tool config
+.claude/
+
+# Python
+__pycache__/
+*.py[cod]
+*.egg-info/
+
+# Editor backups
+*.bak
+*~
+
+# OS generated files
+Thumbs.db

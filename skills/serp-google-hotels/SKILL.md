@@ -1,4 +1,4 @@
-﻿---
+---
 name: dataify-google-hotels
 description: When the user requests "Call Google Hotels" or "Search hotel prices/availability", or explicitly mentions the hotel query field, the dataify-google-hotels skill is triggered.
 ---

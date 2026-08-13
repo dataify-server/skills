@@ -1,4 +1,4 @@
-﻿---
+---
 name: dataify-google-jobs
 description: When the user requests "Call Google Jobs" or "Search for job/recruitment information and return the original response", or specifies the job search fields, the dataify-google-jobs skill is triggered.
 ---

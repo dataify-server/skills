@@ -1,4 +1,4 @@
-﻿---
+---
 name: dataify-google-lens
 description: When the user requests "Call Google Lens" or "Search by Image", the dataify-google-lens skill is triggered.
 ---

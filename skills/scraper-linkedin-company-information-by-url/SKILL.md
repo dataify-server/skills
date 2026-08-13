@@ -1,4 +1,4 @@
-﻿---
+---
 name: "dataify-linkedin-company-information-by-url"
 description: "Prepare Dataify builder requests for the linkedin.com scraper family rooted at linkedin_company_information_by-url. Use  when needs to work with the successful Dataify scraper detail entry for linkedin_company_information_by-url, let the user choose one of its available tools, read saved getToolParams options, and generate a scraperapi.dataify.com/builder curl request with DATAIFY_API_TOKEN."
 ---

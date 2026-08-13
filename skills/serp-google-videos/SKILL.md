@@ -1,4 +1,4 @@
-﻿---
+---
 name: dataify-google-videos
 description: When the user requests "Call Google Videos" or "Video Search", or explicitly mentions the video field, the dataify-google-videos skill is triggered.
 ---

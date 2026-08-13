@@ -1,4 +1,4 @@
-﻿---
+---
 name: dataify-google-ai-mode
 description: When users search for information using Google AI Model, this skill is employed
 ---
