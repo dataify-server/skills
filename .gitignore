@@ -6,6 +6,7 @@
 __pycache__/
 *.py[cod]
 .workbuddy/
+publish.sh
 !config/
 !config/product-messaging.json
 !config/clawhub-top-skills.json
