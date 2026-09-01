@@ -1,0 +1,22 @@
+{
+  "captured_at": "2026-08-31",
+  "sort": "downloads",
+  "source": "ClawHub public skill metadata",
+  "skills": [
+    {"rank": 1, "slug": "dataify-amazon-seller", "local_skill": "scraper-amazon-seller", "downloads": 822},
+    {"rank": 2, "slug": "dataify-airbnb-product-by-searchurl", "local_skill": "scraper-airbnb-product-by-searchurl", "downloads": 799},
+    {"rank": 3, "slug": "dataify-amazon-product-list", "local_skill": "scraper-amazon-product-list", "downloads": 784},
+    {"rank": 4, "slug": "dataify-amazon-global-product", "local_skill": "scraper-amazon-global-product", "downloads": 782},
+    {"rank": 5, "slug": "dataify-web-unlocker", "local_skill": "dataify-web-unlocker", "downloads": 780},
+    {"rank": 6, "slug": "dataify-crunchbase-company-by-url", "local_skill": "scraper-crunchbase-company-by-url", "downloads": 776},
+    {"rank": 7, "slug": "dataify-amazon-product", "local_skill": "scraper-amazon-product", "downloads": 774},
+    {"rank": 8, "slug": "dataify-github-repository-by-repo-url", "local_skill": "scraper-github-repository-by-repo-url", "downloads": 764},
+    {"rank": 9, "slug": "dataify-amazon-comment", "local_skill": "scraper-amazon-comment", "downloads": 762},
+    {"rank": 10, "slug": "dataify-booking-hotellist", "local_skill": "scraper-booking-hotellist", "downloads": 735},
+    {"rank": 11, "slug": "dataify-google-play-store-reviews-by-url", "local_skill": "scraper-google-play-store-reviews-by-url", "downloads": 733},
+    {"rank": 12, "slug": "dataify-linkedin-company-information-by-url", "local_skill": "scraper-linkedin-company-information-by-url", "downloads": 730},
+    {"rank": 13, "slug": "dataify-twitter-profile-by-profileurl", "local_skill": "scraper-twitter-profile-by-profileurl", "downloads": 714},
+    {"rank": 14, "slug": "dataify-reddit-posts", "local_skill": "scraper-reddit-posts", "downloads": 710},
+    {"rank": 15, "slug": "dataify-glassdoor-company-by-url", "local_skill": "scraper-glassdoor-company-by-url", "downloads": 696}
+  ]
+}

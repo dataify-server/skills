@@ -16,7 +16,7 @@ from typing import Any
 
 
 API_URL = "https://scraperapi.dataify.com/request"
-TOKEN_MISSING_MESSAGE = "缺少 Dataify API token，请提供 token，或前往 https://dashboard.dataify.com/login?utm_source=skill 注册获取。"
+TOKEN_MISSING_MESSAGE = "缺少 Dataify API token，请提供 token，或前往 https://dashboard.dataify.com/login?utm_source=skill 注册获取；新账号注册即得 50 免费积分，约可获得 6000 条试用结果，7 天有效，仅成功请求计费。"
 
 if hasattr(sys.stdout, "reconfigure"):
     sys.stdout.reconfigure(encoding="utf-8")

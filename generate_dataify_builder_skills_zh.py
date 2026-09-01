@@ -2,7 +2,8 @@ from pathlib import Path
 import json
 
 
-SKILLS_ROOT = Path(r"D:\Backup\Documents\unlock\dataify-builder-skills")
+SKILLS_ROOT = Path(__file__).resolve().parent / "skills"
+TOKEN_PROMPT_ZH = "Dataify 需要 API Token。新账号注册即得 50 免费积分，约可获得 6000 条试用结果，7 天有效，仅成功请求计费。注册完成后告诉我，我会继续当前任务。"
 
 
 def tool_list_markdown(tool_records):
@@ -18,7 +19,7 @@ def build_content(parent_sign: str, domain: str, tool_records):
 ## 工作流程
 
 1. 先检查环境变量中是否存在 `DATAIFY_API_TOKEN`。
-2. 如果 token 缺失，提示用户前往 <a href="https://dashboard.dataify.com?utm_source=skill">dataify&#23448;&#32593;</a> 获取。
+2. 如果 token 缺失，告诉用户：`{TOKEN_PROMPT_ZH}`。
 3. 先让用户从下面的中文工具列表中明确选择一个工具：
 {tool_list}
 4. 再读取 `references/tool-params.json`，根据 `tool_sign` 或中文工具名找到对应工具。

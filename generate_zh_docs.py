@@ -21,6 +21,8 @@ SECTION_TRANSLATIONS = {
     "Error Handling": "错误处理",
 }
 
+TOKEN_PROMPT_ZH = "Dataify 需要 API Token。新账号注册即得 50 免费积分，约可获得 6000 条试用结果，7 天有效，仅成功请求计费。注册完成后告诉我，我会继续当前任务。"
+
 PHRASE_TRANSLATIONS = [
     ("Submit ", "提交 "),
     ("collection jobs through Dataify Builder", "采集任务到 Dataify Builder"),
@@ -124,7 +126,7 @@ def generate_serp_zh(skill_dir, name, skill_md_content):
 4. 调用 API 前展示 Markdown 参数表。不要包含 `Authorization`。表格必须包含以下列：`参数名`、`当前值`、`默认值`、`说明`。
 5. 展示表格后询问用户是否需要修改参数。用户确认后才能调用 API。
 6. 如果用户修改了参数，重新生成表格并再次确认。
-7. 如果 token 缺失，提示用户前往 [Dataify Dashboard](https://dashboard.dataify.com?utm_source=skill) 获取 `DATAIFY_API_TOKEN`。
+7. 如果 token 缺失，告诉用户：`{TOKEN_PROMPT_ZH}`。
 """
 
     if has_preview:
@@ -140,7 +142,7 @@ python3 scripts/preview_params.py --params-json '{{"q":"用户查询内容"}}'
 ## 工作流程
 
 1. 解析用户请求，提取搜索参数。
-2. 如果 token 缺失，提示用户前往 [Dataify Dashboard](https://dashboard.dataify.com?utm_source=skill) 获取 `DATAIFY_API_TOKEN`。
+2. 如果 token 缺失，告诉用户：`{TOKEN_PROMPT_ZH}`。
 3. 构建请求参数，仅包含用户请求的字段和必要的默认值。
 4. 使用 `python3` 运行脚本。
 
@@ -229,10 +231,10 @@ def generate_builder_zh(skill_dir, name, skill_md_content):
 - 如果用户在请求中提供了 token，则使用该 token。
 - 如果未提供 token，先检查环境变量中是否已保存 `DATAIFY_API_TOKEN`。
 - 如果本地已保存 `DATAIFY_API_TOKEN`，则直接使用。
-- 如果没有可用的 token，提示用户前往 [Dataify](https://dashboard.dataify.com?utm_source=skill) 获取 API TOKEN。
+- 如果没有可用的 token，告诉用户：`%s`。
 - 没有 token 不要调用 Builder 接口。
 
-"""
+""" % TOKEN_PROMPT_ZH
 
     content += TOKEN_SECTION_ZH
 
@@ -243,12 +245,12 @@ def generate_builder_zh(skill_dir, name, skill_md_content):
 3. 询问用户是否需要修改参数。
 4. 规范化并验证最终参数值。
 5. 获取 Dataify token（用户提供或已保存的 `DATAIFY_API_TOKEN`）。
-6. 如果没有 token，提示用户前往 [Dataify](https://dashboard.dataify.com?utm_source=skill) 获取。
+6. 如果没有 token，告诉用户：`%s`。
 7. 提交 Builder 请求创建任务。
 8. 从响应中读取 `data.task_id`。
 9. 提交成功后停止，告诉用户前往 [Dataify](https://dashboard.dataify.com?utm_source=skill) 查看或管理结果。
 
-"""
+""" % TOKEN_PROMPT_ZH
 
     # Parameter sections
     if param_sections:

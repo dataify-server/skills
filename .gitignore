@@ -1,17 +1,14 @@
-# macOS
-.DS_Store
-
-# Local editor / tool config
-.claude/
-
-# Python
+*.zip
+*.ps1
+*.json
+.env
+.env.*
 __pycache__/
 *.py[cod]
-*.egg-info/
-
-# Editor backups
-*.bak
-*~
-
-# OS generated files
-Thumbs.db
+.workbuddy/
+!config/
+!config/product-messaging.json
+!config/clawhub-top-skills.json
+!config/skill-trigger-descriptions.json
+!config/skill-trigger-cases.json
+!config/parameter-interaction.json

@@ -1,0 +1,24 @@
+{
+  "version": 1,
+  "cases": [
+    {"query": "下载这个 YouTube 视频文件", "expected": "dataify-youtube-video-by-url", "forbidden": ["dataify-youtube-video-post", "dataify-youtube-product-by-id"]},
+    {"query": "获取视频 ID 对应的标题、作者和播放量", "expected": "dataify-youtube-product-by-id", "forbidden": ["dataify-youtube-video-by-url", "dataify-youtube-video-post"]},
+    {"query": "按关键词批量采集 YouTube 视频帖子", "expected": "dataify-youtube-video-post", "forbidden": ["dataify-youtube-video-by-url", "dataify-youtube-product-by-id"]},
+    {"query": "获取这个 YouTube 视频的字幕", "expected": "dataify-youtube-transcript-by-id", "forbidden": ["dataify-youtube-video-by-url"]},
+    {"query": "采集这个 YouTube 视频的评论", "expected": "dataify-youtube-comment-by-id", "forbidden": ["dataify-youtube-product-by-id"]},
+    {"query": "搜索上海附近的咖啡店", "expected": "dataify-google-maps", "forbidden": ["dataify-google-map-details"]},
+    {"query": "获取这个 Place ID 的营业时间和地址详情", "expected": "dataify-google-map-details", "forbidden": ["dataify-google-maps"]},
+    {"query": "采集这个 Google Maps 商家的评论", "expected": "dataify-google-maps-reviews", "forbidden": ["dataify-google-map-details", "dataify-google-maps"]},
+    {"query": "搜索 Google Shopping 上的咖啡机", "expected": "dataify-google-shopping", "forbidden": ["dataify-google-shopping-keywords", "dataify-instagram-reels"]},
+    {"query": "按关键词批量采集 Google Shopping 商品数据", "expected": "dataify-google-shopping-keywords", "forbidden": ["dataify-google-shopping", "dataify-instagram-reels"]},
+    {"query": "采集这个 Instagram Reel 的详情", "expected": "dataify-instagram-reels", "forbidden": ["dataify-google-shopping-keywords"]},
+    {"query": "获取 Amazon ASIN 的商品详情", "expected": "dataify-amazon-product", "forbidden": ["dataify-amazon-product-list", "dataify-amazon-global-product"]},
+    {"query": "按关键词和域名采集 Amazon 商品列表", "expected": "dataify-amazon-product-list", "forbidden": ["dataify-amazon-product"]},
+    {"query": "按品牌采集 Amazon 全球站商品", "expected": "dataify-amazon-global-product", "forbidden": ["dataify-amazon-product-list"]},
+    {"query": "采集 Facebook 帖子的评论", "expected": "dataify-facebook-comment-by-url", "forbidden": ["dataify-facebook-post-by-url", "dataify-facebook-profile-by-url"]},
+    {"query": "采集 Facebook 个人主页资料", "expected": "dataify-facebook-profile-by-url", "forbidden": ["dataify-facebook-post-by-url"]},
+    {"query": "任务 123 是否完成", "expected": "dataify-task-status", "forbidden": ["dataify-amazon-product", "dataify-facebook-events"]},
+    {"query": "下载已成功任务 123 的 JSON 结果", "expected": "dataify-task-result", "forbidden": ["dataify-task-status"]},
+    {"query": "DATAIFY_API_TOKEN 应该怎么配置", "expected": "dataify-task-operations", "forbidden": ["dataify-amazon-product", "dataify-reddit-posts"]}
+  ]
+}

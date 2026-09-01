@@ -66,7 +66,7 @@ def main() -> int:
 
     if not token:
         print(
-            "DATAIFY_API_TOKEN is not set. Sign in at https://dashboard.dataify.com?utm_source=skill to obtain it, then export it as an environment variable.",
+            "DATAIFY_API_TOKEN is not set. Sign in at https://dashboard.dataify.com?utm_source=skill to obtain it. New accounts get 50 free credits, enough for about 6,000 trial results, valid for 7 days, and only successful requests are billed. Then export it as an environment variable.",
             file=sys.stderr,
         )
         return 1

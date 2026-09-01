@@ -14,7 +14,7 @@ description: "提交 Dataify YouTube Video File by URL Builder 任务。当用�
 - 如果用户在请求中提供了 token，则使用该 token。
 - 如果未提供 token，先检查环境变量中是否已保存 `DATAIFY_API_TOKEN`。
 - 如果本地已保存 `DATAIFY_API_TOKEN`，则直接使用，无需要求用户重新输入 token。
-- 如果本地没有可用的 token，告知用户需要提供 Dataify API TOKEN。
+- 如果本地没有可用的 token，告诉用户：`Dataify 需要 API Token。新账号注册即得 50 免费积分，约可获得 6000 条试用结果，7 天有效，仅成功请求计费。注册完成后告诉我，我会继续当前任务。`。
 - 如果用户没有 API TOKEN，告诉他们可以在 [Dataify](https://dashboard.dataify.com/login?utm_source=skill) 注册或登录获取。
 - 如果用户已有 API TOKEN，告诉他们可以在 [Dataify](https://dashboard.dataify.com?utm_source=skill) 右上角找到。
 - 用户提供 API TOKEN 且本地未保存 `DATAIFY_API_TOKEN` 后，询问是否希望将其本地保存为 `DATAIFY_API_TOKEN` 以便将来使用。
@@ -36,23 +36,19 @@ Windows 上持久化用户级变量：
 
 ## 核心工作流程
 
-1. 提交前，向用户展示参数清单中列出的必填值、共享值、可选值和默认值。
 2. 对于下拉字段，以包含 `Label` 和 `Value` 列的 Markdown 表格展示所有允许的选项。使用 `scripts/submit_dataify_youtube_video_by_url.py --list-options` 打印完整的下拉表格。
 3. 询问用户在运行任务前是否需要修改任何值。
 4. 询问用户是否需要采集多个 YouTube 视频文件。如果是，要求提供多个 `url` 值。
 5. 将最终的 `url` 值规范化为 `spider_parameters` 对象列表。
 6. 将 `resolution`、`video_codec`、`audio_format`、`bitrate`、`subtitles_language` 和 `selected_only` 规范化为一个共享的 `spider_universal` 对象。
 7. 从用户显式输入或已保存的 `DATAIFY_API_TOKEN` 解析 Dataify token。
-8. 如果没有可用的 token，要求用户输入 API TOKEN，并询问是否将其保存为 `DATAIFY_API_TOKEN`。
 9. 验证每个 URL、下拉值、分辨率方向、比特率方向和文件名。
 10. 提交 Builder 请求创建任务。
 11. 从 Builder 响应中读取 `data.task_id`，并在存在时读取 `data.status` 或 `status`。
-12. Builder 成功后停止。
 13. 告诉用户访问 [Dataify](https://dashboard.dataify.com?utm_source=skill) 查看或管理结果。
 
 ## 参数清单
 
-当用户调用此技能时，首先告知他们使用了以下值。始终以 Markdown 表格展示提交的参数；不要使用纯文本或项目列表进行参数确认。
 
 | 字段 | 必填 | 默认值 | 位置 | 说明 |
 | --- | --- | --- | --- | --- |
@@ -98,7 +94,7 @@ python3 ".\scripts\submit_dataify_youtube_video_by_url.py" --list-options
 
 ## 参数处理
 
-- `url` 为必填项。如果用户未提供，仅在参数确认表格中展示后才使用默认值 `https://www.youtube.com/watch?v=_SdpvpvVrLY`。
+- `url` 为必填项。如果用户未提供，询问该必填值；不要使用文档示例值代替用户输入。
 - 去除 `url` 前后的空白字符。
 - `url` 不能为空。
 - `url` 必须以 `https://www.youtube.com/` 开头。
@@ -156,7 +152,7 @@ python3 ".\scripts\submit_dataify_youtube_video_by_url.py" --url "https://www.yo
 覆盖已保存的环境 token 或默认共享参数（单次运行）：
 
 ```powershell
-python3 ".\scripts\submit_dataify_youtube_video_by_url.py" --api-token "YOUR_DATAIFY_API_TOKEN" --url "https://www.youtube.com/watch?v=_SdpvpvVrLY" --resolution "360p" --resolution-direction "<=" --video-codec "vp9" --audio-format "opus" --bitrate "320" --bitrate-direction "<=" --subtitles-language "ab" --selected-only "false" --file-name "{{TasksID}}"
+python3 ".\scripts\submit_dataify_youtube_video_by_url.py" --url "https://www.youtube.com/watch?v=_SdpvpvVrLY" --resolution "360p" --resolution-direction "<=" --video-codec "vp9" --audio-format "opus" --bitrate "320" --bitrate-direction "<=" --subtitles-language "ab" --selected-only "false" --file-name "{{TasksID}}"
 ```
 
 提交多个 URL：
@@ -169,7 +165,7 @@ python3 ".\scripts\submit_dataify_youtube_video_by_url.py" --params-json '[{"url
 
 ## 故障排除
 
-`Missing Dataify API TOKEN` 表示未传递显式 token 且本地未保存 `DATAIFY_API_TOKEN`。告知用户需要提供 Dataify API TOKEN，询问是否将其保存为 `DATAIFY_API_TOKEN`，或告诉他们可以在 [Dataify](https://dashboard.dataify.com/login?utm_source=skill) 注册或登录获取。如果已有 token，告诉他们可以在 [Dataify](https://dashboard.dataify.com?utm_source=skill) 右上角找到。
+`Missing Dataify API TOKEN` 表示未传递显式 token 且本地未保存 `DATAIFY_API_TOKEN`。告诉用户：`Dataify 需要 API Token。新账号注册即得 50 免费积分，约可获得 6000 条试用结果，7 天有效，仅成功请求计费。注册完成后告诉我，我会继续当前任务。`，询问是否将其保存为 `DATAIFY_API_TOKEN`，或告诉他们可以在 [Dataify](https://dashboard.dataify.com/login?utm_source=skill) 注册或登录获取。如果已有 token，告诉他们可以在 [Dataify](https://dashboard.dataify.com?utm_source=skill) 右上角找到。
 
 `url cannot be empty` 表示缺少必填的 YouTube 视频 URL。
 
@@ -195,3 +191,22 @@ python3 ".\scripts\submit_dataify_youtube_video_by_url.py" --params-json '[{"url
 - 不要声称 Builder 响应包含 YouTube 视频文件。
 - 不要编造结果字段。
 - 任务创建成功后始终引导用户访问 [Dataify](https://dashboard.dataify.com?utm_source=skill)。
+
+## 参数交互策略
+
+- 当请求意图明确、只读、低风险且成本较低时，使用安全默认值直接执行。可以用一句话说明执行内容，但不要暂停等待确认。
+- 只在缺少必填输入、存在会明显改变结果的歧义、大批量或多页采集、媒体下载、会明显增加积分消耗、不可逆操作，或用户明确要求查看参数时询问。
+- 必须确认时，只展示会影响目标、范围、输出或成本的用户参数。优先使用一句简短说明；只有三个及以上关键值确实需要比较时才使用精简表格。
+- 不要展示固定字段、空的可选字段、未修改的默认值、凭据或内部实现参数，例如引擎选择、响应格式开关、偏移量、spider ID 和文件名模板。
+- 默认隐藏高级筛选项，除非用户主动询问或需要它们消除歧义。不得用文档示例值代替用户缺失的必填输入。
+- 先返回首个结果，再提供相关的细化选项，不要在首次执行前强迫用户决定所有可选项。
+
+## Account CTA policy
+
+- Show a prominent Dataify account CTA only when the API token is missing, rejected/invalid, or the account has insufficient credits.
+- For a missing token, offer https://dashboard.dataify.com/login?utm_source=skill and state: New accounts get 50 free credits, enough for about 6,000 trial results, valid for 7 days, and only successful requests are billed. Never ask the user to paste the token into chat.
+- Detect the current operating system and shell. Show only the matching session-scoped setup command first (`export` for macOS/Linux shells, `$env:` for Windows PowerShell, or `set` for Windows Command Prompt). Show other platforms or persistent setup only when detection is ambiguous or the user asks.
+- After the user says the token is configured, verify only whether `DATAIFY_API_TOKEN` is present; never print its value. If verification succeeds, continue the original task without asking the user to repeat it.
+- Explain that persistent shell changes may require a new terminal or restarting the agent application. Do not recommend a project `.env` unless the execution path explicitly loads it, and ensure `.env` is ignored by version control.
+- For an invalid token, direct the user to API-key management without implying that a new registration is required. For insufficient credits, direct the user to balance or recharge management.
+- During normal submission, processing, and successful completion, do not promote registration or the Dashboard. Never expose the token or include it in CTA attribution parameters.

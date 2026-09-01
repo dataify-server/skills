@@ -1,0 +1,9 @@
+{
+  "signup_offer": {
+    "enabled": true,
+    "credits": 50,
+    "login_url": "https://dashboard.dataify.com/login?utm_source=skill",
+    "copy_en": "New accounts get {credits} free credits, enough for about 6,000 trial results, valid for 7 days, and only successful requests are billed.",
+    "copy_zh": "新账号注册即得 {credits} 免费积分，约可获得 6000 条试用结果，7 天有效，仅成功请求计费。"
+  }
+}

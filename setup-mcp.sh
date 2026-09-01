@@ -8,9 +8,6 @@
 #   curl -fsSL https://raw.githubusercontent.com/dataify-server/skills/main/setup-mcp.sh | bash
 #   or
 #   bash setup-mcp.sh
-#   bash setup-mcp.sh --token YOUR_TOKEN
-#   bash setup-mcp.sh --token YOUR_TOKEN --client claude
-#   bash setup-mcp.sh --token YOUR_TOKEN --client cursor
 #   bash setup-mcp.sh --tools "google_serp,amazon,youtube"
 #
 
@@ -42,22 +39,20 @@ TOOLS=""
 
 while [[ $# -gt 0 ]]; do
     case $1 in
-        --token)  TOKEN="$2"; shift 2 ;;
         --client) CLIENT="$2"; shift 2 ;;
         --tools)  TOOLS="$2"; shift 2 ;;
         --help)
             echo "Usage: bash setup-mcp.sh [OPTIONS]"
             echo ""
             echo "Options:"
-            echo "  --token TOKEN    Your Dataify API token"
             echo "  --client CLIENT  Target client: claude, cursor, windsurf (default: auto-detect)"
             echo "  --tools TOOLS    Comma-separated tool list (default: all 25 tools)"
             echo "  --help           Show this help message"
             echo ""
             echo "Examples:"
             echo "  bash setup-mcp.sh"
-            echo "  bash setup-mcp.sh --token abc123 --client claude"
-            echo "  bash setup-mcp.sh --token abc123 --tools \"google_serp,amazon,youtube\""
+            echo "  DATAIFY_API_TOKEN=... bash setup-mcp.sh --client claude"
+            echo "  bash setup-mcp.sh --tools \"google_serp,amazon,youtube\""
             exit 0
             ;;
         *) warn "Unknown option: $1"; shift ;;

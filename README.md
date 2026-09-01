@@ -1,21 +1,18 @@
-# Dataify Skills
+# Dataify Skills for Claude Code
 
 **Unlock the web with AI-powered scraping, search, and structured data extraction**
 
 [![License: MIT](https://img.shields.io/badge/License-MIT-blue.svg)](LICENSE)
-[![Skills](https://img.shields.io/badge/Skills-63+-brightgreen.svg)](#skill-catalog)
+[![Skills](https://img.shields.io/badge/Skills-65+-brightgreen.svg)](#skill-catalog)
 [![Datasets](https://img.shields.io/badge/Datasets-25+-orange.svg)](#data-sources)
 [![MCP Tools](https://img.shields.io/badge/MCP_Tools-25+-purple.svg)](#mcp-server)
 [![Platforms](https://img.shields.io/badge/Platforms-25+-red.svg)](#skill-catalog)
-[![Claude Code](https://img.shields.io/badge/Claude_Code-supported-blue.svg)](#quick-start)
-[![Codex](https://img.shields.io/badge/Codex-supported-green.svg)](#quick-start)
-[![OpenClaw](https://img.shields.io/badge/OpenClaw-supported-orange.svg)](#quick-start)
 
-[Quick Start](#quick-start) | [Installation](#installation) | [Skills](#skill-catalog) | [Agent Onboarding](#agent-onboarding) | [MCP Server](#mcp-server) | [Data Sources](#data-sources) | [Competitive Intelligence](#competitive-intelligence) | [Best Practices](#best-practices) | [Settings](#settings) | [Examples](#examples)
+[Quick Start](#quick-start) | [Skills](#skill-catalog) | [Agent Onboarding](#agent-onboarding) | [MCP Server](#mcp-server) | [Data Sources](#data-sources) | [Competitive Intelligence](#competitive-intelligence) | [Best Practices](#best-practices) | [Settings](#settings) | [Examples](#examples)
 
 ## Overview
 
-This plugin integrates [Dataify](https://dashboard.dataify.com?utm_source=github)'s powerful web infrastructure directly into AI coding agents (Claude Code, Codex, OpenClaw), enabling them to:
+This plugin integrates [Dataify](https://dashboard.dataify.com?utm_source=github)'s powerful web infrastructure directly into Claude Code, enabling AI agents to:
 
 - **Scrape any webpage as clean Markdown** — bypassing bot detection, CAPTCHAs, and JavaScript rendering
 - **Search Google, Bing, Yandex, DuckDuckGo** with structured JSON results — titles, links, and descriptions ready for processing
@@ -31,22 +28,11 @@ Built on Dataify's [Web Unlocker](https://doc.dataify.com/web-unlocker?utm_sourc
 
 ### 1. Install
 
-**macOS / Linux:**
-
 ```bash
 curl -fsSL https://raw.githubusercontent.com/dataify-server/skills/main/install.sh | bash
 ```
 
-**Windows (PowerShell):**
-
-```powershell
-irm https://raw.githubusercontent.com/dataify-server/skills/main/install.ps1 | iex
-```
-
-The installer will:
-1. Clone skills to `~/.dataify/skills/`
-2. Auto-detect installed tools (Claude Code, Codex, OpenClaw)
-3. Install skills into detected tools
+The installer will clone the repo, prompt for your API token, and configure your shell environment.
 
 ### 2. Set Your API Token
 
@@ -54,21 +40,21 @@ The installer will:
 export DATAIFY_API_TOKEN="your-api-token"
 ```
 
-Get your API token at [Dataify Dashboard](https://dashboard.dataify.com?utm_source=github).
+Get your API token at [Dataify Dashboard](https://dashboard.dataify.com?utm_source=github). New accounts receive **50 free credits** after registration.
+
+The signup offer is generated from `config/product-messaging.json`. After changing the offer, synchronize and verify all public copy:
+
+```bash
+python3 scripts/sync_product_messaging.py
+python3 scripts/sync_product_messaging.py --check
+python3 scripts/sync_skill_triggers.py
+python3 scripts/sync_skill_triggers.py --check
+python3 scripts/validate_skill_triggers.py
+python3 scripts/sync_parameter_interaction.py
+python3 scripts/sync_parameter_interaction.py --check
+```
 
 ### 3. Try It
-
-**In Claude Code or OpenClaw** — use slash commands directly:
-
-```
-/dataify-serp-google-search
-/dataify-web-unlocker
-/dataify-scraper-amazon-product
-```
-
-**In Codex** — skills are auto-loaded from `~/.codex/AGENTS.md`, just describe your task.
-
-**Via scripts:**
 
 ```bash
 # Search Google
@@ -83,88 +69,31 @@ python3 skills/dataify-web-unlocker/scripts/invoke-dataify-web-unlocker.py \
 python3 skills/scraper-amazon-product/scripts/submit_amazon_product.py --help
 ```
 
-## Installation
-
-### Supported Tools
-
-| Tool | Platform | Install Method | Invoke Method |
-|------|----------|---------------|---------------|
-| **Claude Code** | macOS, Linux, Windows | Symlink to `~/.claude/skills/` | `/dataify-{skill-name}` |
-| **Codex (OpenAI)** | macOS, Linux, Windows | Generate `~/.codex/AGENTS.md` | Auto-loaded as instructions |
-| **OpenClaw** | macOS, Linux, Windows | Symlink to `~/.openclaw/skills/` | `/dataify-{skill-name}` |
-
-### Install Options
-
-```bash
-# Interactive (auto-detect tools)
-bash install.sh
-
-# Install to a specific tool
-bash install.sh --target claude-code
-bash install.sh --target codex
-bash install.sh --target openclaw
-bash install.sh --target all
-
-# Install specific skills only
-bash install.sh --target claude-code --skills "serp-google-search,scraper-amazon-product"
-
-# Install with API token
-bash install.sh --target all --token YOUR_TOKEN
-
-# Uninstall
-bash install.sh --uninstall --target claude-code
-bash install.sh --uninstall --target all
-```
-
-**Windows PowerShell:**
-
-```powershell
-# Interactive
-.\install.ps1
-
-# Install to a specific tool
-.\install.ps1 -Target claude-code
-.\install.ps1 -Target all
-
-# Uninstall
-.\install.ps1 -Uninstall -Target all
-```
-
-### How It Works
-
-- **Claude Code & OpenClaw**: The installer creates symbolic links from each skill directory into the tool's skills folder. Skills appear as slash commands (e.g., `/dataify-serp-google-search`). Updating the repo with `git pull` automatically updates all skills.
-- **Codex**: The installer reads all SKILL.md frontmatter and generates a skill index in `~/.codex/AGENTS.md`. Codex loads this as global instructions, making all skills available to the agent.
-- **MCP Server**: For GUI-based tools (Claude Desktop, Cursor, Windsurf), use `setup-mcp.sh` to configure the MCP endpoint instead. See [MCP Server](#mcp-server).
-
 ## Agent Onboarding
 
 When an AI agent first interacts with Dataify Skills, follow this routing to find the right path:
 
-### Path A: Skills Installer (Recommended)
+For outcome-level requests that do not name a specific API, start with `dataify-router`. For asynchronous Builder task IDs, continue with `dataify-task-operations` instead of treating submission as completed delivery.
 
-For AI coding agents (Claude Code, Codex, OpenClaw) — install skills directly into your tool with one command.
+### Path A: MCP Server (Recommended)
 
-> Jump to [Installation](#installation)
-
-### Path B: MCP Server
-
-For GUI-based AI clients (Claude Desktop, Cursor, Windsurf) — connect via the MCP Server for tool-based interaction.
+For AI agents using Claude Desktop, Cursor, Windsurf, or any MCP-compatible client — connect via the MCP Server for the most seamless experience.
 
 > Jump to [MCP Server](#mcp-server)
 
-### Path C: Script Execution
+### Path B: Script Execution
 
 For direct script execution and automation — use the Python scripts in each skill directory.
 
 > Jump to [Quick Start](#quick-start)
 
-### Path D: Skills Reference
+### Path C: Skills Reference
 
 For browsing available capabilities and finding the right skill for your task.
 
 > Jump to [Skill Catalog](#skill-catalog)
 
-### Path E: REST API
+### Path D: REST API
 
 For no-install, direct API integration — call Dataify APIs directly.
 
@@ -208,14 +137,14 @@ The script will:
 3. Auto-detect your AI client (Claude Desktop / Cursor / Windsurf)
 4. Write the MCP config automatically
 
-You can also pass arguments directly:
+You can also select the client and tools non-interactively. Set the token in the environment so it is not exposed in shell history or the process list:
 
 ```bash
-# Specify token and client
-bash setup-mcp.sh --token YOUR_TOKEN --client claude
+# macOS / Linux
+DATAIFY_API_TOKEN="$DATAIFY_API_TOKEN" bash setup-mcp.sh --client claude
 
 # Load only specific tools
-bash setup-mcp.sh --token YOUR_TOKEN --tools "google_serp,amazon,youtube"
+bash setup-mcp.sh --tools "google_serp,amazon,youtube"
 ```
 
 ### Manual Setup
@@ -439,7 +368,7 @@ Structured search engine results across 25 verticals.
 
 ### Scraper Skills (37)
 
-Structured data extraction from 20+ platforms via async task management.
+Structured data extraction from 20+ platforms with automatic task monitoring and final-result retrieval by default.
 
 #### Amazon (5)
 
@@ -580,13 +509,16 @@ python3 skills/serp-google-search/scripts/google_search.py \
 Use Scraper skills for structured data extraction with async task management:
 
 ```python
-# Submit a batch task, then poll for results
+# Submit a batch task; Dataify Skills then monitor it and return the final result
 python3 skills/scraper-amazon-product/scripts/submit_amazon_product.py \
   --keyword "wireless headphones" --count 100
 ```
 
 **Best practices:**
-- Submit task first, then poll for completion
+- Submit once, monitor the returned task ID, and download the final result automatically
+- Use submission-only or `--no-wait` behavior only when you explicitly need the task ID without waiting
+- Default monitoring waits up to 10 minutes; media and clearly high-volume tasks use a 30-minute profile
+- A local monitoring timeout never resubmits or cancels the remote task; resume with the same task ID
 - Use for bulk data collection (100+ items)
 - Results are delivered as structured JSON
 
@@ -611,35 +543,26 @@ python3 skills/scraper-amazon-product/scripts/submit_amazon_product.py \
 | `DATAIFY_API_TOKEN` | Yes | Your Dataify API token ([get one here](https://dashboard.dataify.com?utm_source=github)) |
 | `DATAIFY_SKILLS_DIR` | No | Custom install directory (default: `~/.dataify/skills`) |
 
-### Installed Paths
-
-| Tool | Skills Path | Config File |
-|------|------------|-------------|
-| **Claude Code** | `~/.claude/skills/dataify-*/` | — |
-| **Codex** | — | `~/.codex/AGENTS.md` |
-| **OpenClaw** | `~/.openclaw/skills/dataify-*/` | — |
-| **Claude Desktop** | — | `~/Library/Application Support/Claude/claude_desktop_config.json` |
-| **Cursor** | — | MCP settings |
-| **Windsurf** | — | MCP settings |
-
 ### API Token Resolution
 
 Skills resolve the API token in this order:
 
-1. `--token` command-line argument
-2. `DATAIFY_API_TOKEN` environment variable
-3. Prompt user for input
+1. Read `DATAIFY_API_TOKEN` from the environment without displaying it.
+2. If it is missing, show setup instructions for the current operating system and shell.
+3. After configuration, verify only that the variable exists and continue the original task.
+
+Skills do not accept public command-line token arguments or ask users to paste tokens into chat. Run `skills/dataify-task-operations/scripts/token_setup.py` for safe platform-specific setup guidance.
 
 ### Skill Structure
 
-Each skill follows a standard layout, compatible with Claude Code, Codex, and OpenClaw:
+Each skill follows a standard layout:
 
 ```
 skill-name/
-├── SKILL.md              # Skill documentation (required, used by Claude Code & OpenClaw)
+├── SKILL.md              # Skill documentation (required)
 ├── SKILL.zh-CN.md        # Chinese documentation (optional)
 ├── agents/
-│   └── openai.yaml       # OpenAI/Codex agent configuration
+│   └── openai.yaml       # OpenAI agent configuration
 ├── scripts/
 │   └── main_script.py    # Execution script
 └── references/
@@ -653,9 +576,8 @@ dataify_skills/
 ├── README.md
 ├── CONTRIBUTING.md
 ├── LICENSE
-├── install.sh              # Universal installer (macOS/Linux)
-├── install.ps1             # Universal installer (Windows PowerShell)
-├── setup-mcp.sh            # MCP Server setup (Claude Desktop/Cursor/Windsurf)
+├── install.sh
+├── setup-mcp.sh
 │
 └── skills/
     ├── dataify-web-unlocker/                          # Web Unlocker
@@ -734,10 +656,10 @@ dataify_skills/
 python3 skills/scraper-amazon-product/scripts/submit_amazon_product.py \
   --keyword "wireless earbuds"
 
-python3 skills/scraper-ebay-products/scripts/submit_dataify_ebay_products.py \
+python3 skills/scraper-ebay-products/scripts/submit_ebay_products.py \
   --keyword "wireless earbuds"
 
-python3 skills/scraper-walmart-products/scripts/submit_dataify_walmart_products.py \
+python3 skills/scraper-walmart-products/scripts/submit_walmart_products.py \
   --keyword "wireless earbuds"
 ```
 
@@ -745,13 +667,13 @@ python3 skills/scraper-walmart-products/scripts/submit_dataify_walmart_products.
 
 ```bash
 # Monitor a brand across social platforms
-python3 skills/scraper-instagram-profiles/scripts/submit_dataify_instagram_profiles.py \
+python3 skills/scraper-instagram-profiles/scripts/submit_instagram_profiles.py \
   --url "https://instagram.com/brand_name"
 
-python3 skills/scraper-youtube-profiles/scripts/submit_dataify_youtube_profiles.py \
+python3 skills/scraper-youtube-profiles/scripts/submit_youtube_profiles.py \
   --url "https://youtube.com/@brand_name"
 
-python3 skills/scraper-reddit-posts/scripts/submit_dataify_reddit_posts.py \
+python3 skills/scraper-reddit-posts/scripts/submit_reddit_posts.py \
   --keyword "brand_name"
 ```
 
@@ -762,7 +684,7 @@ python3 skills/scraper-reddit-posts/scripts/submit_dataify_reddit_posts.py \
 python3 skills/serp-google-jobs/scripts/google_jobs.py \
   --params-json '{"q":"senior AI engineer","gl":"us"}'
 
-python3 skills/scraper-indeed-job-listings/scripts/indeed_job_listings.py \
+python3 skills/scraper-indeed-job-listings/scripts/submit_indeed_job_listings.py \
   --keyword "senior AI engineer"
 ```
 
