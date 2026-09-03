@@ -2,6 +2,7 @@
 
 import json
 import os
+import re
 
 from wait_for_task import DEFAULT_MAX_INTERVAL, wait_for_task
 
@@ -11,6 +12,9 @@ def extract_task_id(payload):
         try:
             payload = json.loads(payload)
         except ValueError:
+            candidate = payload.strip()
+            if re.fullmatch(r"[A-Za-z0-9_-]{8,128}", candidate):
+                return candidate
             return None
     if isinstance(payload, dict):
         for key in ("task_id", "taskId"):

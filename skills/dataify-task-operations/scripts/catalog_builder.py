@@ -9,7 +9,7 @@ import urllib.error
 import urllib.parse
 import urllib.request
 
-from task_runtime import complete_task
+from task_runtime import complete_task, extract_task_id
 
 
 BUILDER_URL = "https://scraperapi.dataify.com/builder?platform=1"
@@ -99,9 +99,10 @@ def submit(tool, rows, token):
         raise RuntimeError("Builder request failed with HTTP {}: {}".format(exc.code, exc.read().decode("utf-8", errors="replace")))
     except urllib.error.URLError as exc:
         raise RuntimeError("Builder request failed: {}".format(exc.reason))
-    task_id = payload.get("data", {}).get("task_id")
+    task_id = extract_task_id(payload)
     if not task_id:
-        raise RuntimeError("Builder did not return task_id: {}".format(json.dumps(payload, ensure_ascii=False)))
+        detail = payload.get("data") if isinstance(payload, dict) else payload
+        raise RuntimeError("Builder did not return a valid task_id: {}".format(json.dumps(detail, ensure_ascii=False)))
     return task_id
 
 

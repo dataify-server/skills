@@ -70,6 +70,19 @@ class SkillIntegrityTests(unittest.TestCase):
             self.assertTrue(case["forbidden"], case)
             for name in case["forbidden"]:
                 self.assertIn(name, descriptions, case)
+
+    def test_competitive_intelligence_has_positive_and_negative_routes(self):
+        descriptions = self._skill_descriptions()
+        dataset = json.loads((ROOT / "config" / "skill-trigger-cases.json").read_text(encoding="utf-8"))
+        cases = dataset["cases"]
+        positives = [case for case in cases if case["expected"] == "dataify-competitive-intelligence"]
+        negatives = [case for case in cases if "dataify-competitive-intelligence" in case["forbidden"]]
+        self.assertGreaterEqual(len(positives), 3)
+        self.assertGreaterEqual(len(negatives), 3)
+        description = descriptions["dataify-competitive-intelligence"]
+        self.assertIn("Do not use", description)
+        self.assertIn("competitor", description.lower())
+
     def test_repository_validator(self):
         spec = importlib.util.spec_from_file_location("validate_skills", ROOT / "scripts" / "validate_skills.py")
         module = importlib.util.module_from_spec(spec)

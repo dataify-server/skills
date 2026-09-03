@@ -6,6 +6,7 @@ from __future__ import annotations
 import argparse
 import ast
 import re
+import subprocess
 import sys
 from pathlib import Path
 
@@ -47,6 +48,16 @@ def validate(root: Path) -> list[str]:
             matches = list(path.parent.glob(ref)) if "*" in ref else [path.parent / ref]
             if not matches or any(not candidate.exists() for candidate in matches):
                 errors.append(f"{path}: missing local reference {ref}")
+                continue
+            if (root / ".git").exists():
+                for candidate in matches:
+                    relative = candidate.relative_to(root)
+                    ignored = subprocess.run(
+                        ["git", "-C", str(root), "check-ignore", "--quiet", "--", str(relative)],
+                        check=False,
+                    )
+                    if ignored.returncode == 0:
+                        errors.append(f"{path}: local reference is ignored by Git: {ref}")
 
     for script in sorted((root / "skills").glob("*/scripts/*.py")):
         try:
@@ -71,4 +82,3 @@ def main() -> int:
 
 if __name__ == "__main__":
     sys.exit(main())
-

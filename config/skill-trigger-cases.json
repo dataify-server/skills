@@ -19,6 +19,23 @@
     {"query": "采集 Facebook 个人主页资料", "expected": "dataify-facebook-profile-by-url", "forbidden": ["dataify-facebook-post-by-url"]},
     {"query": "任务 123 是否完成", "expected": "dataify-task-status", "forbidden": ["dataify-amazon-product", "dataify-facebook-events"]},
     {"query": "下载已成功任务 123 的 JSON 结果", "expected": "dataify-task-result", "forbidden": ["dataify-task-status"]},
-    {"query": "DATAIFY_API_TOKEN 应该怎么配置", "expected": "dataify-task-operations", "forbidden": ["dataify-amazon-product", "dataify-reddit-posts"]}
+    {"query": "DATAIFY_API_TOKEN 应该怎么配置", "expected": "dataify-task-operations", "forbidden": ["dataify-amazon-product", "dataify-reddit-posts"]},
+    {"query": "对比 Dataify 和 Bright Data 的产品能力、公开价格和开发者体验，并给出改进建议", "expected": "dataify-competitive-intelligence", "forbidden": ["dataify-router", "dataify-web-unlocker", "dataify-google-search"]},
+    {"query": "分析竞品最近一年的价格变化和用户差评，整理销售 battlecard", "expected": "dataify-competitive-intelligence", "forbidden": ["dataify-router", "dataify-amazon-comment"]},
+    {"query": "研究 AI 网页采集市场，区分直接竞品、相邻竞品和替代方案", "expected": "dataify-competitive-intelligence", "forbidden": ["dataify-router", "dataify-google-search"]},
+    {"query": "比较同款耳机在 Amazon、eBay 和 Walmart 的到手价，找出异常低价和渠道差异", "expected": "dataify-price-intelligence", "forbidden": ["dataify-amazon-product", "dataify-competitive-intelligence"]},
+    {"query": "持续监控竞品套餐价格变化并给出调价建议", "expected": "dataify-price-intelligence", "forbidden": ["dataify-google-shopping", "dataify-competitive-intelligence"]},
+    {"query": "汇总多个平台对这个产品的差评主题，给出产品改进优先级", "expected": "dataify-review-intelligence", "forbidden": ["dataify-amazon-comment", "dataify-competitive-intelligence"]},
+    {"query": "分析应用商店和 Reddit 用户反馈中的流失原因", "expected": "dataify-review-intelligence", "forbidden": ["dataify-reddit-comment-by-url"]},
+    {"query": "寻找美国正在招聘数据工程师的 AI 初创公司，按符合 ICP 的程度排序", "expected": "dataify-lead-intelligence", "forbidden": ["dataify-google-jobs", "dataify-competitive-intelligence"]},
+    {"query": "给我一份有公开证据和评分原因的目标客户公司名单", "expected": "dataify-lead-intelligence", "forbidden": ["dataify-linkedin-company-information-by-url"]},
+    {"query": "监控 Dataify 最近一个月的新闻、论坛讨论和负面舆情", "expected": "dataify-brand-monitoring", "forbidden": ["dataify-google-news", "dataify-competitive-intelligence"]},
+    {"query": "追踪新品发布后品牌提及渠道和声誉风险变化", "expected": "dataify-brand-monitoring", "forbidden": ["dataify-reddit-posts"]},
+    {"query": "抓取这个竞品官网首页的内容", "expected": "dataify-web-unlocker", "forbidden": ["dataify-competitive-intelligence"]},
+    {"query": "搜索 Bright Data 的最新新闻", "expected": "dataify-google-news", "forbidden": ["dataify-competitive-intelligence"]},
+    {"query": "采集这个 Amazon 商品的用户评论", "expected": "dataify-amazon-comment", "forbidden": ["dataify-competitive-intelligence", "dataify-review-intelligence"]},
+    {"query": "搜索 Google Shopping 上一款耳机当前有哪些报价", "expected": "dataify-google-shopping", "forbidden": ["dataify-price-intelligence"]},
+    {"query": "搜索 Dataify 今天的最新新闻", "expected": "dataify-google-news", "forbidden": ["dataify-brand-monitoring"]},
+    {"query": "采集这个 LinkedIn 公司主页", "expected": "dataify-linkedin-company-information-by-url", "forbidden": ["dataify-lead-intelligence"]}
   ]
 }

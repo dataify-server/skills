@@ -13,3 +13,6 @@ publish.sh
 !config/skill-trigger-descriptions.json
 !config/skill-trigger-cases.json
 !config/parameter-interaction.json
+!skills/*/references/*.json
+!skills/*/schemas/*.json
+!skills/*/scripts/*.ps1

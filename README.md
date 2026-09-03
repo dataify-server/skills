@@ -8,7 +8,7 @@
 [![MCP Tools](https://img.shields.io/badge/MCP_Tools-25+-purple.svg)](#mcp-server)
 [![Platforms](https://img.shields.io/badge/Platforms-25+-red.svg)](#skill-catalog)
 
-[Quick Start](#quick-start) | [Skills](#skill-catalog) | [Agent Onboarding](#agent-onboarding) | [MCP Server](#mcp-server) | [Data Sources](#data-sources) | [Competitive Intelligence](#competitive-intelligence) | [Best Practices](#best-practices) | [Settings](#settings) | [Examples](#examples)
+[Quick Start](#quick-start) | [Skills](#skill-catalog) | [Agent Onboarding](#agent-onboarding) | [MCP Server](#mcp-server) | [Data Sources](#data-sources) | [Business Intelligence](#business-intelligence) | [Best Practices](#best-practices) | [Settings](#settings) | [Examples](#examples)
 
 ## Overview
 
@@ -258,9 +258,29 @@ Dataify provides pre-built data extraction for 25+ platforms, accessible via MCP
 | **Google Maps** | Place details, reviews | Scripts |
 | **Google Shopping** | Product search by keyword | Scripts |
 
-## Competitive Intelligence
+## Business Intelligence
 
-Use Dataify Skills to build real-time competitive intelligence workflows with live web data.
+Use business-level Skills when the requested deliverable is an analysis or decision rather than one platform's raw records:
+
+| Business outcome | Skill | Example request |
+| --- | --- | --- |
+| Competitor strategy | `dataify-competitive-intelligence` | Compare Dataify and Bright Data and recommend priorities. |
+| Price decision | `dataify-price-intelligence` | Compare the same headphones across marketplaces and flag price anomalies. |
+| Voice of customer | `dataify-review-intelligence` | Find repeated complaints across reviews and prioritize product fixes. |
+| Prospect companies | `dataify-lead-intelligence` | Find US AI startups hiring data engineers and rank ICP fit. |
+| Brand reputation | `dataify-brand-monitoring` | Monitor recent Dataify mentions and surface material reputation risks. |
+
+### Competitive Intelligence
+
+Use the independent [dataify-competitive-intelligence](skills/dataify-competitive-intelligence/) workflow to turn a business question into a scoped, sourced comparison. It discovers and classifies sources, routes them to search, Web Unlocker, or dedicated scrapers, preserves resumable evidence, and produces evidence-linked Markdown, JSON, and CSV outputs. It also supports bounded incremental snapshot comparison for recurring monitoring.
+
+Quick request:
+
+```text
+Compare Dataify with Bright Data for an engineering team choosing a web-data provider. Cover product scope, developer workflow, public pricing, and review themes from the last 12 months. Cite current evidence and recommend the top three actions.
+```
+
+The lower-level examples below remain useful when you want to run an individual collection step directly.
 
 ### Competitor Snapshot
 
@@ -308,13 +328,14 @@ Agent workflow:
 
 ## Skill Catalog
 
-### Skills Overview (63)
+### Skills Overview (68)
 
 | Category | Count | Description |
 |----------|-------|-------------|
 | [Web Unlocker](#web-unlocker) | 1 | Bypass bot detection, scrape any webpage |
 | [SERP Skills](#serp-skills) | 25 | Search engine results (Google 17 + Bing 6 + DuckDuckGo + Yandex) |
 | [Scraper Skills](#scraper-skills-37) | 37 | Structured data extraction from 20+ platforms |
+| [Business Workflows](#business-intelligence) | 5 | Competitive, price, review, lead, and brand decision workflows |
 
 ### Web Unlocker
 
@@ -531,7 +552,7 @@ python3 skills/scraper-amazon-product/scripts/submit_amazon_product.py \
 | Get Amazon products | `scraper-amazon-product` or MCP `amazon` tool |
 | Collect social media data | `scraper-instagram-*` / `scraper-facebook-*` or MCP tool |
 | Build a custom scraper | `dataify-web-unlocker` + your parsing logic |
-| Run competitive analysis | Combine multiple skills (see [Competitive Intelligence](#competitive-intelligence)) |
+| Run competitive analysis | Use [dataify-competitive-intelligence](skills/dataify-competitive-intelligence/) |
 | Download YouTube videos | `scraper-youtube-video-by-url` / `scraper-youtube-audio-by-url` |
 
 ## Settings

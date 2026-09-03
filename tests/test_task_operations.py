@@ -70,6 +70,12 @@ class WaitForTaskTests(unittest.TestCase):
     def test_runtime_extracts_nested_task_id(self):
         self.assertEqual("task-nested", RUNTIME.extract_task_id({"data": {"task_id": "task-nested"}}))
 
+    def test_runtime_extracts_string_task_id_from_data(self):
+        self.assertEqual("task-string", RUNTIME.extract_task_id({"data": "task-string"}))
+
+    def test_runtime_rejects_business_error_string_as_task_id(self):
+        self.assertIsNone(RUNTIME.extract_task_id({"data": "缺失必填参数:repo_url"}))
+
     def test_runtime_returns_final_result_envelope(self):
         with mock.patch.object(RUNTIME, "wait_for_task", return_value={"items": [1]}) as waiter:
             result = RUNTIME.complete_task("task-final", "Bearer secret", 600, 60)

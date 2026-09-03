@@ -1,6 +1,6 @@
 ---
 name: dataify-router
-description: "Route broad research, search, scraping, monitoring, marketplace, social, travel, jobs, maps, and competitive-intelligence requests to the smallest suitable Dataify skill set. Use when the user describes an outcome without naming a specific Dataify API or scraper."
+description: "Route broad search, scraping, monitoring, marketplace, social, travel, jobs, and maps requests to the smallest suitable Dataify skill set. Use when the user describes a collection outcome without naming a specific Dataify API or scraper. Do not use for competitor analysis or market intelligence."
 ---
 
 # Dataify Router
@@ -23,6 +23,11 @@ Translate the user's outcome into a capability plan, then invoke the minimum req
 - Use a `serp-*` skill for search-engine discovery and fresh result pages.
 - Use `dataify-web-unlocker` for a known page requiring rendering or access handling.
 - Use a `scraper-*` skill for structured platform records.
+- Use `dataify-competitive-intelligence` when multiple sources must be synthesized into a competitor comparison, pricing or review analysis, battlecard, or market-landscape decision.
+- Use `dataify-price-intelligence` for normalized multi-seller or multi-channel price decisions.
+- Use `dataify-review-intelligence` for cross-source customer-feedback themes and product actions.
+- Use `dataify-lead-intelligence` for ICP company discovery, qualification, and evidence-based ranking.
+- Use `dataify-brand-monitoring` for recurring cross-source mentions, issue detection, and reputation risk.
 - Combine discovery and structured scraping only when discovery is needed to identify target URLs or IDs.
 - If several platforms are requested, state the source plan and run independent sources separately.
 

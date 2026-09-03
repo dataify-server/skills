@@ -13,7 +13,7 @@ Use this skill to prepare Dataify builder requests for the scraper family rooted
 **Input:** a GitHub repository URL.
 
 ```bash
-python3 scripts/build-dataify-request.py --tool-sign github_repository_by-repo-url --params-json '[{"url":"https://github.com/dataify-server/skills"}]'
+python3 scripts/build-dataify-request.py --tool-sign github_repository_by-repo-url --params-json '[{"repo_url":"https://github.com/dataify-server/skills"}]'
 ```
 
 This submits the task, waits for completion, downloads the final result, and returns it. Add `--no-wait` only when submission-only behavior is requested.
