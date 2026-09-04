@@ -69,8 +69,9 @@ class BusinessIntelligenceTests(unittest.TestCase):
                 "shopping_results": [{"title": "Camera", "price": "$99", "link": "https://shop.example/camera"}]
             }), stderr="")):
                 code = runtime.run("price", ["--product", "Camera", "--max-actions", "1", "--output-dir", directory])
-            self.assertEqual(0, code)
+            self.assertEqual(2, code)
             report = json.loads((Path(directory) / "report.json").read_text())
+            self.assertEqual("insufficient_evidence", report["status"])
             self.assertEqual(1, report["metrics"]["record_count"])
             self.assertEqual(99.0, report["metrics"]["minimum_price"])
             self.assertEqual(64, len(report["evidence"][0]["sha256"]))
@@ -87,7 +88,7 @@ class BusinessIntelligenceTests(unittest.TestCase):
                                   "output": "raw/a01.json", "error": None}]}
             runtime.write_json(root / "state.json", state)
             with patch.dict(os.environ, {"DATAIFY_API_TOKEN": "secret"}), patch.object(runtime, "execute_action") as call:
-                self.assertEqual(0, runtime.run("lead", ["--resume", str(root)]))
+                self.assertEqual(2, runtime.run("lead", ["--resume", str(root)]))
             call.assert_not_called()
 
     def test_review_known_amazon_url_uses_structured_scraper(self):
@@ -161,6 +162,87 @@ class BusinessIntelligenceTests(unittest.TestCase):
             runtime.execute_action(action, "secret")
         self.assertEqual("utf-8", run.call_args.kwargs["encoding"])
         self.assertEqual("replace", run.call_args.kwargs["errors"])
+
+    def test_serp_parser_ignores_related_and_navigation_records(self):
+        runtime = load_runtime()
+        payload = {
+            "organic": [{"title": "Notion review", "link": "https://reviews.example/notion", "description": "Great app"}],
+            "related": [{"text": "Notion login", "link": "https://google.com/search?q=notion+login"}],
+            "navigation": [{"title": "Images", "href": "https://google.com/images"}],
+        }
+        records = runtime.records_for("review", payload, "ev-1", "Notion")
+        self.assertEqual(["https://reviews.example/notion"], [row["url"] for row in records])
+
+    def test_freshness_filter_excludes_old_dated_records(self):
+        runtime = load_runtime()
+        records = [
+            {"text": "old", "date": "2021-03-18", "url": "https://example/old"},
+            {"text": "new", "date": "2026-08-20", "url": "https://example/new"},
+        ]
+        kept, excluded = runtime.apply_scope_filters("review", records, "6 months", "US", as_of="2026-09-04T00:00:00+00:00")
+        self.assertEqual(["new"], [row["text"] for row in kept])
+        self.assertEqual(1, excluded["outside_freshness"])
+
+    def test_geography_filter_excludes_explicit_lead_mismatch(self):
+        runtime = load_runtime()
+        records = [
+            {"company": "US Co", "location": "New York, United States"},
+            {"company": "ZA Co", "location": "Cape Town, South Africa"},
+        ]
+        kept, excluded = runtime.apply_scope_filters("lead", records, "", "US")
+        self.assertEqual(["US Co"], [row["company"] for row in kept])
+        self.assertEqual(1, excluded["geography_mismatch"])
+
+    def test_acceptance_gate_rejects_empty_brand_report(self):
+        runtime = load_runtime()
+        gate = runtime.acceptance_gate("brand", [], {"record_count": 0})
+        self.assertFalse(gate["accepted"])
+        self.assertIn("external mention", gate["reasons"][0])
+
+    def test_acceptance_gate_requires_two_comparable_prices(self):
+        runtime = load_runtime()
+        one = [{"title": "Camera", "price": "$99", "currency": "$", "comparable": True, "url": "https://a"}]
+        gate = runtime.acceptance_gate("price", one, runtime.analyze("price", one))
+        self.assertFalse(gate["accepted"])
+
+    def test_acceptance_gate_requires_detail_evidence_for_review(self):
+        runtime = load_runtime()
+        records = [{"text": "Great app", "url": "https://example/review", "evidence_stage": "discovery"}] * 3
+        self.assertFalse(runtime.acceptance_gate("review", records, runtime.analyze("review", records))["accepted"])
+
+    def test_application_error_payload_is_not_success(self):
+        runtime = load_runtime()
+        ok, error = runtime.validate_action_result(subprocess.CompletedProcess([], 0, stdout='{"code":520,"data":"Other Errors"}', stderr=""))
+        self.assertFalse(ok)
+        self.assertIn("520", error)
+
+    def test_detail_actions_are_added_from_discovery_within_budget(self):
+        runtime = load_runtime()
+        state = {"kind": "review", "subject": "Notion", "max_actions": 3, "actions": [
+            {"id": "a01", "type": "search", "capability": "dataify-google-search", "query": "Notion reviews",
+             "url": None, "subject": "Notion", "status": "success", "attempts": 1, "output": "raw/a01.json", "error": None, "geography": "US"}
+        ]}
+        payloads = {"a01": {"organic": [
+            {"title": "Notion reviews", "link": "https://www.trustpilot.com/review/notion.so"},
+            {"title": "Notion reviews", "link": "https://www.capterra.com/p/186596/Notion/reviews/"},
+        ]}}
+        added = runtime.add_detail_actions(state, payloads)
+        self.assertEqual(2, added)
+        self.assertTrue(all(action["stage"] == "detail" for action in state["actions"][1:]))
+
+    def test_lead_scoring_does_not_call_keyword_overlap_high_fit(self):
+        runtime = load_runtime()
+        payload = {"organic": [{
+            "title": "Generic AI Company", "link": "https://linkedin.com/company/generic-ai",
+            "description": "AI startup data engineers web data"
+        }]}
+        records = runtime.records_for("lead", payload, "ev-1", "AI startups hiring data engineers web data")
+        self.assertLess(records[0]["qualification_score"], 70)
+        self.assertIn("requires_detail_verification", records[0]["missing_fields"])
+
+    def test_copied_business_workflow_files_are_not_shipped(self):
+        for folder in ("dataify-brand-monitoring", "dataify-lead-intelligence", "dataify-price-intelligence", "dataify-review-intelligence"):
+            self.assertFalse((ROOT / "skills" / folder / "scripts" / "business_workflow.py").exists())
 
 
 if __name__ == "__main__":

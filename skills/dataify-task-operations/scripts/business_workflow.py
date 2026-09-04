@@ -4,7 +4,7 @@
 from __future__ import annotations
 
 import argparse
-from datetime import datetime, timezone
+from datetime import datetime, timedelta, timezone
 import hashlib
 import json
 import os
@@ -74,7 +74,7 @@ def parser(kind: str) -> argparse.ArgumentParser:
 
 def search_action(action_id: str, capability: str, query: str, subject: str) -> dict[str, Any]:
     return {"id": action_id, "type": "search", "capability": capability, "query": query, "url": None,
-            "subject": subject, "status": "pending", "attempts": 0, "output": None, "error": None}
+            "subject": subject, "stage": "discovery", "status": "pending", "attempts": 0, "output": None, "error": None}
 
 
 def url_action(action_id: str, url: str, subject: str, kind: str) -> dict[str, Any]:
@@ -85,7 +85,7 @@ def url_action(action_id: str, url: str, subject: str, kind: str) -> dict[str, A
     elif kind == "review" and "google." in host and "/maps" in url.lower():
         capability = "scraper-google-maps-reviews"
     return {"id": action_id, "type": "url", "capability": capability, "query": None, "url": url,
-            "subject": subject, "status": "pending", "attempts": 0, "output": None, "error": None}
+            "subject": subject, "stage": "detail", "status": "pending", "attempts": 0, "output": None, "error": None}
 
 
 def make_actions(kind: str, subject: str, args: argparse.Namespace) -> list[dict[str, Any]]:
@@ -219,6 +219,23 @@ def visit_dicts(value: Any):
             yield from visit_dicts(child)
 
 
+SERP_COLLECTIONS = {
+    "organic", "news", "news_results", "shopping", "shopping_results", "local_results",
+    "jobs", "jobs_results", "videos", "images",
+}
+
+
+def record_items(payload: Any):
+    """Traverse result-bearing collections, never SERP navigation or related-query metadata."""
+    if isinstance(payload, dict) and any(key in payload for key in ("general", "input", "navigation", "related", "pagination")):
+        for key in SERP_COLLECTIONS:
+            value = payload.get(key)
+            if isinstance(value, (list, dict)):
+                yield from visit_dicts(value)
+        return
+    yield from visit_dicts(payload)
+
+
 def first(item: dict[str, Any], names: tuple[str, ...]) -> Any:
     for name in names:
         value = item.get(name)
@@ -240,7 +257,7 @@ def currency_from(value: Any, explicit: Any) -> Any:
 def records_for(kind: str, payload: Any, evidence_id: str, subject: str = "") -> list[dict[str, Any]]:
     result: list[dict[str, Any]] = []
     seen: set[str] = set()
-    for item in visit_dicts(payload):
+    for item in record_items(payload):
         if kind == "price":
             price = first(item, ("price", "final_price", "extracted_price", "current_price", "sale_price"))
             title = first(item, ("title", "name", "product_name"))
@@ -249,7 +266,8 @@ def records_for(kind: str, payload: Any, evidence_id: str, subject: str = "") ->
             product_tokens = [token.lower() for token in re.findall(r"[A-Za-z0-9-]+", subject) if len(token) > 2]
             if product_tokens and not all(token in str(title).lower() for token in product_tokens):
                 continue
-            variant_terms = ("bundle", "open box", "renewed", "refurbished", "used", "replacement", "earpad", "ear pad", "case", "cover", "cable")
+            variant_terms = ("bundle", "open box", "renewed", "refurbished", "used", "replacement", "earpad", "ear pad", "case", "cover", "cable",
+                             "warranty", "protection plan", "axiom care", "sold without manufacturer warranty")
             comparable = not any(term in str(title).lower() for term in variant_terms)
             row = {"title": title, "price": price, "currency": currency_from(price, first(item, ("currency", "currency_code"))),
                    "seller": first(item, ("seller", "source", "merchant")), "url": first(item, ("link", "url", "product_link")),
@@ -269,13 +287,17 @@ def records_for(kind: str, payload: Any, evidence_id: str, subject: str = "") ->
             if not (("linkedin.com" in parsed.netloc and parsed.path.startswith("/company/")) or
                     ("crunchbase.com" in parsed.netloc and parsed.path.startswith("/organization/"))):
                 continue
-            signal = str(first(item, ("description", "snippet", "headline", "industry")) or "")
-            tokens = [token.casefold() for token in re.findall(r"[A-Za-z0-9]+", subject) if len(token) > 2]
-            matched = sorted({token for token in tokens if token in (str(name) + " " + signal).casefold()})
-            score = min(100, 40 + 10 * len(matched))
+            signal = str(first(item, ("description", "snippet", "headline", "industry", "about")) or "")
+            joined = (str(name) + " " + signal).casefold()
+            hiring = bool(re.search(r"\b(hiring|job|opening|career|recruit)\w*\b", joined))
+            target_role = bool(re.search(r"\b(data engineer|data engineering)\b", joined))
+            company_detail = any(first(item, names) is not None for names in (("industry",), ("company_size", "employees"), ("headquarters", "location")))
+            verified = company_detail and hiring and target_role
+            score = 75 if verified else 45
             row = {"company": name, "url": link, "location": first(item, ("location", "country", "city")),
                    "signal": signal or None, "qualification_score": score,
-                   "score_reasons": ["public company entity"] + ["matches '{}'".format(token) for token in matched],
+                   "score_reasons": ["public company entity"] + (["company detail", "current hiring signal", "target role signal"] if verified else []),
+                   "missing_fields": [] if verified else ["requires_detail_verification"],
                    "evidence_id": evidence_id}
         else:
             title = first(item, ("title", "name"))
@@ -297,6 +319,144 @@ def records_for(kind: str, payload: Any, evidence_id: str, subject: str = "") ->
             seen.add(key)
             result.append(row)
     return result[:500]
+
+
+def parse_record_date(value: Any) -> datetime | None:
+    if not value:
+        return None
+    text = str(value).strip()
+    for candidate in (text, text.replace("Z", "+00:00")):
+        try:
+            parsed = datetime.fromisoformat(candidate)
+            return parsed.replace(tzinfo=parsed.tzinfo or timezone.utc)
+        except ValueError:
+            pass
+    for pattern in ("%b %d, %Y", "%B %d, %Y", "%Y-%m-%d"):
+        try:
+            return datetime.strptime(text.replace("—", "").strip(), pattern).replace(tzinfo=timezone.utc)
+        except ValueError:
+            pass
+    return None
+
+
+def freshness_cutoff(freshness: str, as_of: datetime) -> datetime | None:
+    match = re.search(r"(\d+)\s*(day|week|month|year)s?", freshness or "", re.I)
+    if not match:
+        return None
+    count = int(match.group(1))
+    days = count * {"day": 1, "week": 7, "month": 30, "year": 365}[match.group(2).lower()]
+    return as_of - timedelta(days=days)
+
+
+def apply_scope_filters(kind: str, records: list[dict[str, Any]], freshness: str, geography: str,
+                        as_of: str | None = None) -> tuple[list[dict[str, Any]], dict[str, int]]:
+    reference = datetime.fromisoformat(as_of.replace("Z", "+00:00")) if as_of else datetime.now(timezone.utc)
+    cutoff = freshness_cutoff(freshness, reference)
+    kept: list[dict[str, Any]] = []
+    excluded = {"outside_freshness": 0, "geography_mismatch": 0}
+    geo_aliases = {
+        "us": ("united states", "usa", "u.s.", "new york", "california", "texas", "washington", "massachusetts"),
+        "de": ("germany", "deutschland", "berlin", "munich", "hamburg"),
+        "cn": ("china", "中国", "beijing", "shanghai", "shenzhen", "guangzhou"),
+    }
+    foreign_markers = {
+        "us": ("south africa", "germany", "deutschland", "china", "中国", "india", "canada", "united kingdom"),
+        "de": ("united states", "usa", "south africa", "china", "中国", "india", "canada"),
+        "cn": ("united states", "usa", "south africa", "germany", "deutschland", "india", "canada"),
+    }
+    target_geo = (geography or "").strip().casefold()
+    for row in records:
+        parsed = parse_record_date(row.get("date"))
+        if cutoff and parsed and parsed < cutoff:
+            excluded["outside_freshness"] += 1
+            continue
+        location = str(row.get("location") or "").casefold()
+        if kind == "lead" and location and target_geo in foreign_markers:
+            target_match = any(alias in location for alias in geo_aliases[target_geo])
+            explicit_foreign = any(marker in location for marker in foreign_markers[target_geo])
+            if explicit_foreign and not target_match:
+                excluded["geography_mismatch"] += 1
+                continue
+        kept.append(row)
+    return kept, excluded
+
+
+def acceptance_gate(kind: str, records: list[dict[str, Any]], metrics: dict[str, Any]) -> dict[str, Any]:
+    reasons: list[str] = []
+    if kind == "brand" and not records:
+        reasons.append("at least one verified external mention is required")
+    elif kind == "lead" and not any(row.get("qualification_score", 0) >= 70 and not row.get("missing_fields") for row in records):
+        reasons.append("at least one company must pass detail verification and qualification")
+    elif kind == "price":
+        comparable = [row for row in records if row.get("comparable") is not False and number(row.get("price")) is not None and row.get("url")]
+        if len(comparable) < 2:
+            reasons.append("at least two comparable, sourced prices are required")
+        if not any(row.get("evidence_stage") == "detail" for row in comparable):
+            reasons.append("at least one comparable price must be verified from a detail source")
+    elif kind == "review":
+        usable = [row for row in records if row.get("text") and row.get("url")]
+        if len(usable) < 3:
+            reasons.append("at least three sourced review records are required")
+        if not any(row.get("evidence_stage") == "detail" for row in usable):
+            reasons.append("at least one review must come from detail collection, not a search snippet")
+    return {"accepted": not reasons, "reasons": reasons}
+
+
+def discovery_links(payload: Any, subject: str, kind: str = "") -> list[str]:
+    links: list[str] = []
+    for item in record_items(payload):
+        link = first(item, ("link", "url", "product_link"))
+        title = first(item, ("title", "name"))
+        if not link or not str(link).startswith(("http://", "https://")):
+            continue
+        if "google.com/search" in str(link):
+            continue
+        if kind != "lead" and subject and title and subject.casefold() not in (str(title) + " " + str(link)).casefold():
+            continue
+        if kind == "lead":
+            parsed = urlsplit(str(link))
+            if not (("linkedin.com" in parsed.netloc and parsed.path.startswith("/company/")) or
+                    ("crunchbase.com" in parsed.netloc and parsed.path.startswith("/organization/"))):
+                continue
+        clean = str(link).split("#", 1)[0]
+        if clean not in links:
+            links.append(clean)
+    return links
+
+
+def add_detail_actions(state: dict[str, Any], payloads: dict[str, Any]) -> int:
+    capacity = max(0, int(state.get("max_actions", 0)) - len(state["actions"]))
+    if not capacity:
+        return 0
+    existing = {action.get("url") for action in state["actions"] if action.get("url")}
+    candidates: list[str] = []
+    for action in state["actions"]:
+        if action.get("stage", "discovery") != "discovery" or action["id"] not in payloads:
+            continue
+        for link in discovery_links(payloads[action["id"]], state["subject"], state["kind"]):
+            if link not in existing and link not in candidates:
+                candidates.append(link)
+    for link in candidates[:capacity]:
+        action = url_action("a{:02d}".format(len(state["actions"]) + 1), link, state["subject"], state["kind"])
+        action["geography"] = state.get("geography", "US")
+        state["actions"].append(action)
+    return min(capacity, len(candidates))
+
+
+def validate_action_result(completed: subprocess.CompletedProcess[str]) -> tuple[bool, str | None]:
+    if completed.returncode != 0:
+        return False, (completed.stderr or completed.stdout or "collection failed")[-2000:]
+    try:
+        payload = decode_json_stream(completed.stdout)
+    except json.JSONDecodeError:
+        return (bool(completed.stdout.strip()), None if completed.stdout.strip() else "empty collection response")
+    if isinstance(payload, dict):
+        code = payload.get("code")
+        if isinstance(code, int) and code >= 400:
+            return False, "application response code {}: {}".format(code, str(payload.get("data") or payload.get("message") or "error")[:500])
+        if payload.get("ok") is False or str(payload.get("status", "")).lower() in {"failed", "error"}:
+            return False, str(payload.get("error") or payload.get("message") or "application response reported failure")[:2000]
+    return True, None
 
 
 def number(value: Any) -> float | None:
@@ -344,6 +504,14 @@ def analyze(kind: str, records: list[dict[str, Any]]) -> dict[str, Any]:
         texts = [str(row.get("text", "")).lower() for row in records]
         metrics.update({"positive_signal_count": sum(any(word in text for word in positive) for text in texts),
                         "negative_signal_count": sum(any(word in text for word in negative) for text in texts)})
+        theme_terms = {
+            "performance": ("slow", "performance", "lag", "速度", "卡顿"),
+            "support": ("support", "service", "客服", "支持"),
+            "billing": ("billing", "charge", "subscription", "refund", "扣费", "退款"),
+            "usability": ("complex", "learning curve", "easy", "difficult", "复杂", "易用"),
+        }
+        metrics["themes"] = {theme: sum(any(term in text for term in terms) for text in texts)
+                             for theme, terms in theme_terms.items() if any(any(term in text for term in terms) for text in texts)}
     elif kind == "lead":
         companies = {str(row.get("url", "")).split("?", 1)[0].rstrip("/").casefold() for row in records if row.get("url")}
         metrics["unique_company_count"] = len(companies)
@@ -354,6 +522,9 @@ def analyze(kind: str, records: list[dict[str, Any]]) -> dict[str, Any]:
             domain = urlsplit(str(row.get("url", ""))).netloc.lower() or "unknown"
             channels[domain] = channels.get(domain, 0) + 1
         metrics["channel_counts"] = dict(sorted(channels.items(), key=lambda item: item[1], reverse=True)[:20])
+        negative = ("complaint", "problem", "outage", "breach", "lawsuit", "scam", "投诉", "故障", "泄露")
+        metrics["risk_signal_count"] = sum(any(term in (str(row.get("title", "")) + " " + str(row.get("snippet", ""))).casefold()
+                                                       for term in negative) for row in records)
     return metrics
 
 
@@ -374,10 +545,18 @@ def build_outputs(root: Path, state: dict[str, Any]) -> dict[str, Any]:
         evidence.append({"evidence_id": evidence_id, "action_id": action["id"], "capability": action["capability"],
                          "query": action.get("query"), "url": action.get("url"), "raw_path": action["output"],
                          "sha256": hashlib.sha256(raw).hexdigest(), "collected_at": state["updated_at"]})
-        records.extend(records_for(state["kind"], payload, evidence_id, state["subject"]))
+        action_records = records_for(state["kind"], payload, evidence_id, state["subject"])
+        for row in action_records:
+            row["evidence_stage"] = action.get("stage", "discovery")
+        records.extend(action_records)
+    records, exclusions = apply_scope_filters(state["kind"], records, state.get("freshness", ""), state.get("geography", ""), state.get("updated_at"))
     metrics = analyze(state["kind"], records)
+    metrics["excluded_by_scope"] = exclusions
+    gate = acceptance_gate(state["kind"], records, metrics)
+    failures = [{"action_id": a["id"], "error": a["error"]} for a in state["actions"] if a["status"] == "failed"]
+    status = "complete" if gate["accepted"] else "insufficient_evidence" if evidence else "failed"
     report = {"workflow": state["kind"], "subject": state["subject"], "generated_at": now(),
-              "status": "complete" if evidence else "failed", "metrics": metrics, "records": records,
+              "status": status, "acceptance": gate, "metrics": metrics, "records": records,
               "evidence": evidence, "failures": [{"action_id": a["id"], "error": a["error"]} for a in state["actions"] if a["status"] == "failed"],
               "limitations": ["Automated signals require human review before commercial, pricing, product, or reputation decisions."]}
     write_json(root / "report.json", report)
@@ -387,6 +566,9 @@ def build_outputs(root: Path, state: dict[str, Any]) -> dict[str, Any]:
     for row in records[:20]:
         label = row.get("title") or row.get("company") or str(row.get("text", ""))[:100]
         lines.append("- {} — {}".format(label, row.get("url") or row.get("price") or row.get("rating") or "source retained"))
+    if not gate["accepted"]:
+        lines.extend(["", "## Evidence gaps", ""])
+        lines.extend("- {}".format(reason) for reason in gate["reasons"])
     if report["failures"]:
         lines.extend(["", "## Collection gaps", ""])
         lines.extend("- {}: {}".format(item["action_id"], item["error"]) for item in report["failures"])
@@ -409,7 +591,8 @@ def run(kind: str, argv: list[str] | None = None) -> int:
             parser(kind).error("--max-actions must be at least 1")
         root = args.output_dir or Path("{}-intelligence-run".format(kind))
         actions = make_actions(kind, args.subject, args)[:limit]
-        state = {"version": 1, "kind": kind, "subject": args.subject, "mode": args.mode, "max_actions": limit,
+        state = {"version": 2, "kind": kind, "subject": args.subject, "mode": args.mode, "max_actions": limit,
+                 "geography": args.geography, "freshness": args.freshness, "official_domain": args.official_domain,
                  "created_at": now(), "updated_at": now(), "actions": actions}
         state_path = root / "state.json"
         write_json(state_path, state)
@@ -421,21 +604,36 @@ def run(kind: str, argv: list[str] | None = None) -> int:
         return 1
     raw_dir = root / "raw"
     raw_dir.mkdir(parents=True, exist_ok=True)
+    def execute_pending() -> None:
+        for action in state["actions"]:
+            if action["status"] == "success":
+                continue
+            action["attempts"] += 1
+            completed = execute_action(action, os.environ["DATAIFY_API_TOKEN"].strip())
+            success, result_error = validate_action_result(completed)
+            if success:
+                path = raw_dir / "{}-{}.json".format(action["id"], slug(action["subject"]))
+                path.write_text(completed.stdout, encoding="utf-8")
+                action.update(status="success", output=str(path.relative_to(root)), error=None)
+            else:
+                action.update(status="failed", error=result_error)
+            state["updated_at"] = now()
+            write_json(state_path, state)
+
+    execute_pending()
+    payloads: dict[str, Any] = {}
     for action in state["actions"]:
-        if action["status"] == "success":
+        if action.get("stage", "discovery") != "discovery" or action.get("status") != "success" or not action.get("output"):
             continue
-        action["attempts"] += 1
-        completed = execute_action(action, os.environ["DATAIFY_API_TOKEN"].strip())
-        if completed.returncode == 0:
-            path = raw_dir / "{}-{}.json".format(action["id"], slug(action["subject"]))
-            path.write_text(completed.stdout, encoding="utf-8")
-            action.update(status="success", output=str(path.relative_to(root)), error=None)
-        else:
-            action.update(status="failed", error=(completed.stderr or completed.stdout or "collection failed")[-2000:])
-        state["updated_at"] = now()
+        try:
+            payloads[action["id"]] = decode_json_stream((root / action["output"]).read_text(encoding="utf-8"))
+        except (OSError, json.JSONDecodeError):
+            continue
+    if add_detail_actions(state, payloads):
         write_json(state_path, state)
+        execute_pending()
     report = build_outputs(root, state)
     print(json.dumps({"status": report["status"], "workflow": kind, "subject": state["subject"],
                       "records": report["metrics"]["record_count"], "report": str(root / "report.md"),
                       "report_json": str(root / "report.json"), "state": str(state_path)}, ensure_ascii=False, indent=2))
-    return 0 if report["status"] == "complete" else 1
+    return 0 if report["status"] == "complete" else 2 if report["status"] == "insufficient_evidence" else 1
