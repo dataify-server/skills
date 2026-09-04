@@ -2,6 +2,7 @@ import importlib.util
 import json
 import os
 import sys
+import tempfile
 import unittest
 from pathlib import Path
 from unittest.mock import patch
@@ -89,6 +90,35 @@ class SkillIntegrityTests(unittest.TestCase):
         assert spec.loader
         spec.loader.exec_module(module)
         self.assertEqual([], module.validate(ROOT))
+
+    def test_repository_validator_accepts_crlf_frontmatter(self):
+        spec = importlib.util.spec_from_file_location("validate_skills_crlf", ROOT / "scripts" / "validate_skills.py")
+        module = importlib.util.module_from_spec(spec)
+        assert spec.loader
+        spec.loader.exec_module(module)
+        with tempfile.TemporaryDirectory() as directory:
+            root = Path(directory)
+            skill = root / "skills" / "example-skill"
+            skill.mkdir(parents=True)
+            (skill / "SKILL.md").write_bytes(b"---\r\nname: example-skill\r\ndescription: Example.\r\n---\r\n")
+            self.assertEqual([], module.validate(root))
+
+    def test_legacy_install_checker_distinguishes_stale_folder_from_canonical_folder(self):
+        checker_path = ROOT / "scripts" / "check_legacy_skill_installs.py"
+        spec = importlib.util.spec_from_file_location("legacy_checker", checker_path)
+        module = importlib.util.module_from_spec(spec)
+        assert spec.loader
+        spec.loader.exec_module(module)
+        with tempfile.TemporaryDirectory() as directory:
+            root = Path(directory)
+            canonical = root / "repo" / "serp-google-search"
+            canonical.mkdir(parents=True)
+            (canonical / "SKILL.md").write_text("---\nname: dataify-google-search\ndescription: Search.\n---\n", encoding="utf-8")
+            installed = root / "installed"
+            stale = installed / "dataify-google-search"
+            stale.mkdir(parents=True)
+            (stale / "SKILL.md").write_text("---\nname: dataify-google-search\ndescription: Search.\n---\n", encoding="utf-8")
+            self.assertEqual([(stale, "dataify-google-search", "serp-google-search")], module.conflicts(root / "repo", [installed]))
 
     def test_trigger_validator(self):
         spec = importlib.util.spec_from_file_location(

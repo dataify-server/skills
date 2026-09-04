@@ -27,7 +27,7 @@ def validate(root: Path) -> list[str]:
         if raw.startswith(b"\xef\xbb\xbf"):
             errors.append(f"{path}: UTF-8 BOM before frontmatter")
         text = raw.decode("utf-8-sig")
-        match = re.match(r"^---\n(.*?)\n---(?:\n|$)", text, re.DOTALL)
+        match = re.match(r"^---\r?\n(.*?)\r?\n---(?:\r?\n|$)", text, re.DOTALL)
         if not match:
             errors.append(f"{path}: missing YAML frontmatter")
             continue

@@ -71,6 +71,14 @@ fi
 SKILL_COUNT=$(find "$INSTALL_DIR" -name "SKILL.md" -not -path "*/.git/*" 2>/dev/null | wc -l | tr -d ' ')
 ok "Installed ${SKILL_COUNT} skills"
 
+# Detect stale pre-rename folders without deleting user-owned files.
+if ! python3 "$INSTALL_DIR/scripts/check_legacy_skill_installs.py" \
+    --skills-dir "$INSTALL_DIR/skills" \
+    --installed-dir "$HOME/.claude/skills" \
+    --installed-dir "$HOME/.codex/skills"; then
+    warn "Legacy skill folders were found. Remove the reported old folders before copying or linking the current skills into your agent directory."
+fi
+
 # ── Setup DATAIFY_API_TOKEN ──
 echo ""
 if [ -z "$DATAIFY_API_TOKEN" ]; then

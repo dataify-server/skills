@@ -175,7 +175,7 @@ def direct_request(action: dict[str, Any], token: str) -> subprocess.CompletedPr
 def execute_action(action: dict[str, Any], token: str) -> subprocess.CompletedProcess[str]:
     invocation = command(action)
     if len(invocation) > 1 and Path(invocation[1]).exists():
-        return subprocess.run(invocation, capture_output=True, text=True, check=False)
+        return subprocess.run(invocation, capture_output=True, text=True, encoding="utf-8", errors="replace", check=False)
     return direct_request(action, token)
 
 

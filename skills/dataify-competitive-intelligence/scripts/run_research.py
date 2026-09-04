@@ -12,6 +12,9 @@ import re
 import subprocess
 import sys
 from typing import Any
+import urllib.error
+import urllib.parse
+import urllib.request
 from urllib.parse import parse_qsl, urlencode, urlsplit, urlunsplit
 
 SCRIPT_DIR = Path(__file__).resolve().parent
@@ -99,7 +102,8 @@ def queries(company: str, competitors: list[str], modules: list[str], geography:
     for module in modules:
         for entity in entities:
             if module == "snapshot":
-                add(entity, "snapshot", f'{entity} official website products positioning "{geography}"')
+                subject = "" if domains.get(entity) else f"{entity} "
+                add(entity, "snapshot", f"{subject}official website products positioning {geography}")
             elif module == "product":
                 add(entity, "product", f'{entity} official product documentation API features')
             elif module == "pricing":
@@ -256,6 +260,51 @@ def command_for(action: dict[str, Any]) -> list[str]:
     return [sys.executable, str(script), argument, action["url"]]
 
 
+def direct_request(action: dict[str, Any], token: str) -> subprocess.CompletedProcess[str]:
+    """Run discovery and page-fetch actions when atomic skill scripts are absent."""
+    try:
+        if action.get("type", "discover") == "discover":
+            body = urllib.parse.urlencode({"engine": "google", "q": action["query"], "json": "1"}).encode("utf-8")
+            request = urllib.request.Request(
+                "https://scraperapi.dataify.com/request",
+                data=body,
+                headers={"Authorization": f"Bearer {token}", "Content-Type": "application/x-www-form-urlencoded"},
+                method="POST",
+            )
+        elif action.get("type") == "fetch":
+            body = json.dumps({
+                "url": action["url"], "type": "html", "js_render": "True",
+                "clean_content": "true", "country": "us", "follow_redirect": "True", "isjson": "1",
+            }).encode("utf-8")
+            request = urllib.request.Request(
+                "https://webunlocker.dataify.com/request",
+                data=body,
+                headers={"Authorization": f"Bearer {token}", "Content-Type": "application/json"},
+                method="POST",
+            )
+        else:
+            return subprocess.CompletedProcess([], 1, stdout="", stderr="Atomic scraper script is required for this action")
+        with urllib.request.urlopen(request, timeout=120) as response:
+            output = response.read().decode("utf-8", errors="replace")
+            return subprocess.CompletedProcess([], 0, stdout=output, stderr="")
+    except urllib.error.HTTPError as exc:
+        detail = exc.read().decode("utf-8", errors="replace")
+        return subprocess.CompletedProcess([], 1, stdout="", stderr=detail or f"HTTP {exc.code}")
+    except urllib.error.URLError as exc:
+        return subprocess.CompletedProcess([], 1, stdout="", stderr=f"Request failed: {exc.reason}")
+
+
+def execute_action(action: dict[str, Any], token: str) -> subprocess.CompletedProcess[str]:
+    action_type = action.get("type", "discover")
+    required = SEARCH_SCRIPT if action_type == "discover" else UNLOCKER_SCRIPT if action_type == "fetch" else None
+    if required is not None and not required.exists():
+        return direct_request(action, token)
+    command = command_for(action)
+    return subprocess.run(
+        command, capture_output=True, text=True, encoding="utf-8", errors="replace", check=False
+    )
+
+
 def load_or_plan(args: argparse.Namespace) -> tuple[Path, dict[str, Any]]:
     if args.resume:
         state_path = args.resume if args.resume.name == "state.json" else args.resume / "state.json"
@@ -335,8 +384,6 @@ def write_report(state_path: Path, state: dict[str, Any]) -> Path:
 
 
 def execute(state_path: Path, state: dict[str, Any], args: argparse.Namespace) -> int:
-    if not SEARCH_SCRIPT.exists() or not UNLOCKER_SCRIPT.exists():
-        raise FileNotFoundError("Required Dataify search or Web Unlocker script is missing")
     evidence_dir = state_path.parent / "evidence"
     evidence_dir.mkdir(parents=True, exist_ok=True)
     concurrency = max(1, min(int(args.concurrency), 8))
@@ -347,8 +394,7 @@ def execute(state_path: Path, state: dict[str, Any], args: argparse.Namespace) -
         suffix = "json" if action_type in {"discover", "scrape"} else "txt"
         output_path = evidence_dir / f'{action["id"]}-{slug(action["entity"])}-{action["module"]}.{suffix}'
         try:
-            command = command_for(action)
-            result = subprocess.run(command, capture_output=True, text=True, check=False)
+            result = execute_action(action, os.environ.get("DATAIFY_API_TOKEN", "").strip())
         except (OSError, ValueError) as exc:
             return action, output_path, None, str(exc)[:1000]
         return action, output_path, result, None

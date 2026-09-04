@@ -152,6 +152,16 @@ class BusinessIntelligenceTests(unittest.TestCase):
         records = runtime.records_for("brand", payload, "ev-1", "Dataify")
         self.assertEqual(["Dataify launches"], [row["title"] for row in records])
 
+    def test_atomic_script_output_is_decoded_as_utf8(self):
+        runtime = load_runtime()
+        action = {"type": "search", "capability": "dataify-google-search", "query": "中文", "geography": "cn"}
+        with patch.object(runtime, "command", return_value=[sys.executable, __file__]), patch.object(
+            runtime.subprocess, "run", return_value=subprocess.CompletedProcess([], 0, stdout="中文", stderr="")
+        ) as run:
+            runtime.execute_action(action, "secret")
+        self.assertEqual("utf-8", run.call_args.kwargs["encoding"])
+        self.assertEqual("replace", run.call_args.kwargs["errors"])
+
 
 if __name__ == "__main__":
     unittest.main()

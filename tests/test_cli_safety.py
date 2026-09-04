@@ -80,7 +80,9 @@ class CliSafetyTests(unittest.TestCase):
                 continue
             env = dict(os.environ)
             env.pop("DATAIFY_API_TOKEN", None)
-            completed = subprocess.run(argv, cwd=skill_dir, env=env, text=True, capture_output=True, timeout=10)
+            # Validate the documented command, but execute with the interpreter
+            # running the suite so Windows does not require a `python3` alias.
+            completed = subprocess.run([sys.executable, *argv[1:]], cwd=skill_dir, env=env, text=True, capture_output=True, timeout=10)
             output = completed.stdout + completed.stderr
             if completed.returncode == 0 or "Traceback" in output or "unrecognized arguments" in output:
                 failures.append("{}: rc={} output={}".format(item["local_skill"], completed.returncode, output[-300:]))

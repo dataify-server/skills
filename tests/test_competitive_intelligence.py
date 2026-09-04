@@ -237,6 +237,51 @@ Validate B.
             self.assertEqual("first_party", evidence[1]["source"]["source_type"])
             self.assertTrue((state_path.parent / "report.json").exists())
 
+    def test_subprocess_output_is_decoded_as_utf8(self):
+        runner = load_module("competitive_utf8", RUNNER_PATH)
+        with tempfile.TemporaryDirectory() as directory:
+            root = Path(directory)
+            search = root / "search.py"
+            unlocker = root / "unlocker.py"
+            search.write_text("# test\n", encoding="utf-8")
+            unlocker.write_text("# test\n", encoding="utf-8")
+            args = runner.parser().parse_args([
+                "--company", "漫步者", "--competitor", "JBL", "--module", "snapshot",
+                "--max-actions", "1", "--output-dir", str(root / "run"), "--autopilot",
+            ])
+            state_path, state = runner.load_or_plan(args)
+            completed = subprocess.CompletedProcess([], 0, stdout='{"title":"中文结果"}', stderr="")
+            with patch.object(runner, "SEARCH_SCRIPT", search), patch.object(
+                runner, "UNLOCKER_SCRIPT", unlocker
+            ), patch.object(runner.subprocess, "run", return_value=completed) as run:
+                self.assertEqual(0, runner.execute(state_path, state, args))
+            self.assertEqual("utf-8", run.call_args.kwargs["encoding"])
+            self.assertEqual("replace", run.call_args.kwargs["errors"])
+
+    def test_missing_atomic_scripts_use_direct_fallback(self):
+        runner = load_module("competitive_fallback", RUNNER_PATH)
+        with tempfile.TemporaryDirectory() as directory:
+            root = Path(directory)
+            args = runner.parser().parse_args([
+                "--company", "Acme", "--competitor", "Rival", "--module", "snapshot",
+                "--max-actions", "1", "--output-dir", str(root / "run"), "--autopilot",
+            ])
+            state_path, state = runner.load_or_plan(args)
+            completed = subprocess.CompletedProcess([], 0, stdout='{"organic":[]}', stderr="")
+            with patch.object(runner, "SEARCH_SCRIPT", root / "missing-search.py"), patch.object(
+                runner, "UNLOCKER_SCRIPT", root / "missing-unlocker.py"
+            ), patch.object(runner, "direct_request", return_value=completed) as direct:
+                self.assertEqual(0, runner.execute(state_path, state, args))
+            direct.assert_called_once()
+
+    def test_snapshot_query_does_not_quote_geography_or_repeat_domain_entity(self):
+        runner = load_module("competitive_queries", RUNNER_PATH)
+        query = runner.queries(
+            "Dataify", ["Bright Data"], ["snapshot"], "US", "12 months",
+            {"Dataify": "www.dataify.com"},
+        )[0]["query"]
+        self.assertEqual("site:www.dataify.com official website products positioning US", query)
+
     def test_findings_build_a_complete_verifiable_report(self):
         outputs = load_module("competitive_complete_report", RUNNER_PATH.with_name("research_outputs.py"))
         verifier = load_module("competitive_complete_verify", VERIFY_PATH)
