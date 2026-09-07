@@ -23,6 +23,11 @@ Translate the user's outcome into a capability plan, then invoke the minimum req
 - Use a `serp-*` skill for search-engine discovery and fresh result pages.
 - Use `dataify-web-unlocker` for a known page requiring rendering or access handling.
 - Use a `scraper-*` skill for structured platform records.
+- Use `dataify-agent-onboarding` for first-run setup or access-path selection, and `dataify-mcp` for MCP client configuration or repair.
+- Use `dataify-live-research` for broad current-evidence research; keep competitor-specific decisions in `dataify-competitive-intelligence`.
+- Use `dataify-seo-audit` for crawlability, indexation and on-page diagnosis of a known site.
+- Use `dataify-scraper-builder` only after confirming that no prebuilt platform Skill covers the requested fields.
+- Use `dataify-api-best-practices` when the deliverable is Dataify integration code or a code review.
 - Use `dataify-competitive-intelligence` when multiple sources must be synthesized into a competitor comparison, pricing or review analysis, battlecard, or market-landscape decision.
 - Use `dataify-price-intelligence` for normalized multi-seller or multi-channel price decisions.
 - Use `dataify-review-intelligence` for cross-source customer-feedback themes and product actions.

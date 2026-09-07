@@ -43,8 +43,9 @@ if ! command -v git &>/dev/null; then
 fi
 
 if ! command -v python3 &>/dev/null; then
-    error "python3 is not installed. Please install Python 3.8+ first."
+    error "python3 is not installed. Please install Python 3.11+ first."
 fi
+python3 -c 'import sys; sys.exit(0 if sys.version_info >= (3,11) else 1)' || error 'Python 3.11+ is required.'
 
 PYTHON_VERSION=$(python3 -c "import sys; print(f'{sys.version_info.major}.{sys.version_info.minor}')")
 ok "git found"
@@ -88,7 +89,11 @@ if [ -z "$DATAIFY_API_TOKEN" ]; then
     echo -e "  Get one at: ${BLUE}${DASHBOARD_URL}${NC}"
     echo ""
 
-    read -rp "Enter your API token (or press Enter to skip): " TOKEN_INPUT
+    TOKEN_INPUT=""
+    if [ -r /dev/tty ]; then
+        read -rsp "Enter your API token (or press Enter to skip): " TOKEN_INPUT </dev/tty || true
+        echo ""
+    fi
 
     if [ -n "$TOKEN_INPUT" ]; then
         # Detect shell

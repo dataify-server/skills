@@ -3,7 +3,7 @@
 **Unlock the web with AI-powered scraping, search, and structured data extraction**
 
 [![License: MIT](https://img.shields.io/badge/License-MIT-blue.svg)](LICENSE)
-[![Skills](https://img.shields.io/badge/Skills-65+-brightgreen.svg)](#skill-catalog)
+[![Skills](https://img.shields.io/badge/Skills-78-brightgreen.svg)](#skill-catalog)
 [![Datasets](https://img.shields.io/badge/Datasets-25+-orange.svg)](#data-sources)
 [![MCP Tools](https://img.shields.io/badge/MCP_Tools-25+-purple.svg)](#mcp-server)
 [![Platforms](https://img.shields.io/badge/Platforms-25+-red.svg)](#skill-catalog)
@@ -25,6 +25,13 @@ This plugin integrates [Dataify](https://dashboard.dataify.com?utm_source=github
 Built on Dataify's [Web Unlocker](https://doc.dataify.com/web-unlocker?utm_source=github), [SERP API](https://doc.dataify.com/serp-api?utm_source=github), and [Web Data API](https://doc.dataify.com/web-data-api?utm_source=github), handling complex web access so your AI agents can focus on what matters.
 
 ## Quick Start
+
+Python 3.11 or newer is required for the workflow scripts.
+
+Maintainers: publish self-contained folders built with
+`python3 scripts/build_release.py --output /tmp/dataify-release-NEW`, rather than
+publishing source folders that import shared runtimes. Use a fresh output path
+for every build and validate the resulting folders independently.
 
 ### 1. Install
 
@@ -74,6 +81,8 @@ python3 skills/scraper-amazon-product/scripts/submit_amazon_product.py --help
 When an AI agent first interacts with Dataify Skills, follow this routing to find the right path:
 
 For outcome-level requests that do not name a specific API, start with `dataify-router`. For asynchronous Builder task IDs, continue with `dataify-task-operations` instead of treating submission as completed delivery.
+
+For a guided first run, use [dataify-agent-onboarding](skills/dataify-agent-onboarding/). It detects the current platform, checks token presence without printing it, recommends one integration path, and preserves the user's original goal.
 
 ### Path A: MCP Server (Recommended)
 
@@ -282,6 +291,17 @@ Compare Dataify with Bright Data for an engineering team choosing a web-data pro
 
 The lower-level examples below remain useful when you want to run an individual collection step directly.
 
+## Agent and Developer Workflows
+
+| Outcome | Skill | What it delivers |
+| --- | --- | --- |
+| First successful Dataify action | [dataify-agent-onboarding](skills/dataify-agent-onboarding/) | Platform-aware setup, safe token verification, and path selection |
+| MCP client setup or repair | [dataify-mcp](skills/dataify-mcp/) | Minimal presets and non-destructive configuration merge |
+| Current multi-source brief | [dataify-live-research](skills/dataify-live-research/) | Bounded discovery, evidence capture, citations, and resumable state |
+| Technical/on-page SEO audit | [dataify-seo-audit](skills/dataify-seo-audit/) | Crawl and page findings with evidence and prioritized fixes |
+| Custom public-page extraction | [dataify-scraper-builder](skills/dataify-scraper-builder/) | Prebuilt routing check, site profile, extraction spec, and runnable starter |
+| Integration implementation review | [dataify-api-best-practices](skills/dataify-api-best-practices/) | Auth, retry, task lifecycle, output, and safety audit |
+
 ### Competitor Snapshot
 
 Combine multiple skills to build a comprehensive competitor profile:
@@ -328,7 +348,7 @@ Agent workflow:
 
 ## Skill Catalog
 
-### Skills Overview (68)
+### Skills Overview (78)
 
 | Category | Count | Description |
 |----------|-------|-------------|
@@ -336,6 +356,8 @@ Agent workflow:
 | [SERP Skills](#serp-skills) | 25 | Search engine results (Google 17 + Bing 6 + DuckDuckGo + Yandex) |
 | [Scraper Skills](#scraper-skills-37) | 37 | Structured data extraction from 20+ platforms |
 | [Business Workflows](#business-intelligence) | 5 | Competitive, price, review, lead, and brand decision workflows |
+| [Agent and Developer Workflows](#agent-and-developer-workflows) | 6 | Onboarding, MCP, research, SEO, scraper design, and API guidance |
+| Operations and routing | 4 | Capability routing and asynchronous task status/result handling |
 
 ### Web Unlocker
 
@@ -551,7 +573,11 @@ python3 skills/scraper-amazon-product/scripts/submit_amazon_product.py \
 | Search Google/Bing/etc. | `serp-google-search` / `serp-bing-search` |
 | Get Amazon products | `scraper-amazon-product` or MCP `amazon` tool |
 | Collect social media data | `scraper-instagram-*` / `scraper-facebook-*` or MCP tool |
-| Build a custom scraper | `dataify-web-unlocker` + your parsing logic |
+| Build a custom scraper | [dataify-scraper-builder](skills/dataify-scraper-builder/) after checking for a prebuilt Skill |
+| Run current multi-source research | [dataify-live-research](skills/dataify-live-research/) |
+| Audit a website's SEO | [dataify-seo-audit](skills/dataify-seo-audit/) |
+| Configure Dataify MCP | [dataify-mcp](skills/dataify-mcp/) |
+| Review Dataify API code | [dataify-api-best-practices](skills/dataify-api-best-practices/) |
 | Run competitive analysis | Use [dataify-competitive-intelligence](skills/dataify-competitive-intelligence/) |
 | Download YouTube videos | `scraper-youtube-video-by-url` / `scraper-youtube-audio-by-url` |
 
@@ -601,6 +627,12 @@ dataify_skills/
 ├── setup-mcp.sh
 │
 └── skills/
+    ├── dataify-agent-onboarding/                     # First-run setup
+    ├── dataify-mcp/                                  # MCP configuration
+    ├── dataify-live-research/                        # Multi-source research
+    ├── dataify-seo-audit/                            # SEO audit
+    ├── dataify-scraper-builder/                      # Custom extraction design
+    ├── dataify-api-best-practices/                   # Integration guidance
     ├── dataify-web-unlocker/                          # Web Unlocker
     │
     ├── serp-google-search/                            # SERP — Google (17 verticals)

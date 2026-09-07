@@ -36,6 +36,14 @@
     {"query": "采集这个 Amazon 商品的用户评论", "expected": "dataify-amazon-comment", "forbidden": ["dataify-competitive-intelligence", "dataify-review-intelligence"]},
     {"query": "搜索 Google Shopping 上一款耳机当前有哪些报价", "expected": "dataify-google-shopping", "forbidden": ["dataify-price-intelligence"]},
     {"query": "搜索 Dataify 今天的最新新闻", "expected": "dataify-google-news", "forbidden": ["dataify-brand-monitoring"]},
-    {"query": "采集这个 LinkedIn 公司主页", "expected": "dataify-linkedin-company-information-by-url", "forbidden": ["dataify-lead-intelligence"]}
+    {"query": "采集这个 LinkedIn 公司主页", "expected": "dataify-linkedin-company-information-by-url", "forbidden": ["dataify-lead-intelligence"]},
+    {"query": "我是第一次使用 Dataify，帮我选择接入方式并跑通第一次搜索", "expected": "dataify-agent-onboarding", "forbidden": ["dataify-task-operations", "dataify-google-search"]},
+    {"query": "帮我把 Dataify MCP 配置到 Cursor，只启用搜索和网页抓取工具", "expected": "dataify-mcp", "forbidden": ["dataify-agent-onboarding", "dataify-google-search"]},
+    {"query": "研究生成式 AI 搜索对独立站流量的影响，给出多来源证据和建议", "expected": "dataify-live-research", "forbidden": ["dataify-competitive-intelligence", "dataify-google-search"]},
+    {"query": "审计 https://www.dataify.com/ 的抓取、索引、标题、canonical 和结构化数据问题", "expected": "dataify-seo-audit", "forbidden": ["dataify-google-search", "dataify-web-unlocker"]},
+    {"query": "这个公开网站没有现成采集器，请为产品名称、价格和下一页设计可运行抓取器", "expected": "dataify-scraper-builder", "forbidden": ["dataify-web-unlocker", "dataify-router"]},
+    {"query": "审查这段 Dataify API 集成代码的鉴权、重试和异步任务结果处理", "expected": "dataify-api-best-practices", "forbidden": ["dataify-task-operations", "dataify-agent-onboarding"]},
+    {"query": "搜索 Google 上的 Dataify 官网", "expected": "dataify-google-search", "forbidden": ["dataify-live-research", "dataify-agent-onboarding"]},
+    {"query": "抓取这个已知网页的 HTML", "expected": "dataify-web-unlocker", "forbidden": ["dataify-scraper-builder", "dataify-seo-audit"]}
   ]
 }

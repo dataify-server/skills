@@ -21,6 +21,8 @@ from urllib.parse import urlsplit
 
 
 ROOT = Path(__file__).resolve().parents[3]
+if (Path(__file__).resolve().parents[1] / '_dependencies').is_dir():
+    ROOT = Path(__file__).resolve().parents[1] / '_dependencies'
 MODES = {"quick": 3, "standard": 6, "deep": 12}
 CONFIG = {
     "price": {
@@ -176,6 +178,8 @@ def execute_action(action: dict[str, Any], token: str) -> subprocess.CompletedPr
     invocation = command(action)
     if len(invocation) > 1 and Path(invocation[1]).exists():
         return subprocess.run(invocation, capture_output=True, text=True, encoding="utf-8", errors="replace", check=False)
+    if action.get('capability', '').startswith('scraper-'):
+        return subprocess.CompletedProcess([], 1, '', 'Required platform scraper is not installed; install it before executing this action.')
     return direct_request(action, token)
 
 
@@ -606,8 +610,13 @@ def run(kind: str, argv: list[str] | None = None) -> int:
     raw_dir.mkdir(parents=True, exist_ok=True)
     def execute_pending() -> None:
         for action in state["actions"]:
-            if action["status"] == "success":
+            if action["status"] in {"success", "submitting", "unknown"}:
                 continue
+            if action['status'] == 'failed' and action.get('capability', '').startswith('scraper-'):
+                continue
+            if action.get('capability', '').startswith('scraper-'):
+                action['status'] = 'submitting'
+                write_json(state_path, state)
             action["attempts"] += 1
             completed = execute_action(action, os.environ["DATAIFY_API_TOKEN"].strip())
             success, result_error = validate_action_result(completed)
