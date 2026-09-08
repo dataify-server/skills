@@ -11,7 +11,7 @@ import urllib.request
 TASK_RUNTIME_DIR = os.path.abspath(os.path.join(os.path.dirname(__file__), "..", "..", "dataify-task-operations", "scripts"))
 if TASK_RUNTIME_DIR not in sys.path:
     sys.path.insert(0, TASK_RUNTIME_DIR)
-from task_runtime import complete_task
+from task_runtime import complete_task, extract_task_id
 
 
 BUILDER_URL = "https://scraperapi.dataify.com/builder"
@@ -72,7 +72,7 @@ def submit_builder(api_token, keyword, domain, page_turning, file_name):
         payload = json.loads(raw)
     except json.JSONDecodeError:
         raise RuntimeError("Builder returned non-JSON response: {}".format(raw))
-    task_id = payload.get("data", {}).get("task_id")
+    task_id = extract_task_id(payload)
     if not task_id:
         raise RuntimeError("Builder did not return task_id. Response: {}".format(json.dumps(payload, ensure_ascii=False)))
     return task_id
@@ -101,7 +101,7 @@ def main():
     if not keyword:
         print("Keyword cannot be empty.", file=sys.stderr)
         return 2
-    domain = args.domain.strip()
+    domain = (args.domain or DEFAULT_DOMAIN).strip()
     if not domain:
         print("Domain cannot be empty.", file=sys.stderr)
         return 2

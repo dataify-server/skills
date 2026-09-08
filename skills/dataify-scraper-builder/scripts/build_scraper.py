@@ -228,7 +228,20 @@ def main():
     print(json.dumps(output, ensure_ascii=False, indent=2))
     return 0 if output and all(value not in (None, "", [], {{}}) for value in output.values()) else 2
 
-if __name__ == "__main__": raise SystemExit(main())
+
+
+def _configure_utf8_output():
+    import sys
+    for stream in (sys.stdout, sys.stderr):
+        if hasattr(stream, "reconfigure"):
+            try:
+                stream.reconfigure(encoding="utf-8", errors="replace")
+            except (AttributeError, ValueError):
+                pass
+
+if __name__ == "__main__":
+    _configure_utf8_output()
+    raise SystemExit(main())
 '''.format(fields=field_literal)
 
 
@@ -298,5 +311,15 @@ def main() -> int:
         return 1
 
 
+def _configure_process_utf8_output():
+    for stream in (sys.stdout, sys.stderr):
+        if hasattr(stream, "reconfigure"):
+            try:
+                stream.reconfigure(encoding="utf-8", errors="replace")
+            except (AttributeError, ValueError):
+                pass
+
+
 if __name__ == "__main__":
+    _configure_process_utf8_output()
     raise SystemExit(main())

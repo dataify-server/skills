@@ -555,5 +555,17 @@ def main() -> int:
     return call_api(params, authorization, args.timeout)
 
 
+
+
+def _configure_utf8_output():
+    import sys
+    for stream in (sys.stdout, sys.stderr):
+        if hasattr(stream, "reconfigure"):
+            try:
+                stream.reconfigure(encoding="utf-8", errors="replace")
+            except (AttributeError, ValueError):
+                pass
+
 if __name__ == "__main__":
+    _configure_utf8_output()
     raise SystemExit(main())

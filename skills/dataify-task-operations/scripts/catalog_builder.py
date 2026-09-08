@@ -15,6 +15,19 @@ from task_runtime import complete_task, extract_task_id
 BUILDER_URL = "https://scraperapi.dataify.com/builder?platform=1"
 
 
+def normalize_http_url(value, parameter="url", example=None):
+    text = str(value or "").strip()
+    parsed = urllib.parse.urlsplit(text)
+    if parsed.scheme not in {"http", "https"} or not parsed.netloc:
+        hint = " For example: {}".format(example) if example else ""
+        raise ValueError(
+            "Invalid URL for {}. Provide a complete URL starting with https://.{}".format(
+                parameter, hint
+            )
+        )
+    return text
+
+
 def load_catalog(script_dir):
     return json.loads((Path(script_dir).parent / "references" / "tool-params.json").read_text(encoding="utf-8"))
 
@@ -58,11 +71,18 @@ def map_select_labels(tool, rows):
 
 
 def validate_required(tool, rows):
-    required = [item["param"] for item in tool.get("params", []) if item.get("required") is True]
+    definitions = {item["param"]: item for item in tool.get("params", [])}
+    required = [key for key, item in definitions.items() if item.get("required") is True]
     for index, row in enumerate(rows, 1):
         missing = [key for key in required if row.get(key) in (None, "", [])]
         if missing:
-            raise ValueError("Parameter set {} is missing required values: {}".format(index, ", ".join(missing)))
+            examples = [definitions[key].get("url_example") for key in missing]
+            hint = next((value for value in examples if value), None)
+            suffix = " For example: {}".format(hint) if hint else ""
+            raise ValueError("Parameter set {} is missing required values: {}.{}".format(index, ", ".join(missing), suffix))
+        for key, definition in definitions.items():
+            if row.get(key) not in (None, "", []) and definition.get("format") == "url":
+                row[key] = normalize_http_url(row[key], key, definition.get("url_example"))
 
 
 def build_curl(tool, spider_parameters_json):

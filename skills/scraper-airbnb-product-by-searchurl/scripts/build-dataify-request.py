@@ -9,5 +9,17 @@ if TASK_RUNTIME_DIR not in sys.path:
 from catalog_builder import build_curl, run_catalog_builder
 
 
+
+
+def _configure_utf8_output():
+    import sys
+    for stream in (sys.stdout, sys.stderr):
+        if hasattr(stream, "reconfigure"):
+            try:
+                stream.reconfigure(encoding="utf-8", errors="replace")
+            except (AttributeError, ValueError):
+                pass
+
 if __name__ == "__main__":
+    _configure_utf8_output()
     raise SystemExit(run_catalog_builder(os.path.dirname(__file__)))

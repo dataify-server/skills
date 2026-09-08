@@ -11,7 +11,7 @@ import urllib.request
 TASK_RUNTIME_DIR = os.path.abspath(os.path.join(os.path.dirname(__file__), "..", "..", "dataify-task-operations", "scripts"))
 if TASK_RUNTIME_DIR not in sys.path:
     sys.path.insert(0, TASK_RUNTIME_DIR)
-from task_runtime import complete_task
+from task_runtime import complete_task, extract_task_id
 
 
 DEFAULT_FILE_NAME = "{{TasksID}}"
@@ -130,7 +130,7 @@ def submit_builder(builder_url, spider_id, api_token, spider_parameters, file_na
     except json.JSONDecodeError:
         raise RuntimeError("Builder returned non-JSON response: {}".format(raw))
 
-    task_id = payload.get("data", {}).get("task_id")
+    task_id = extract_task_id(payload)
     if not task_id:
         raise RuntimeError("Builder did not return task_id. Response: {}".format(json.dumps(payload, ensure_ascii=False)))
     return task_id
@@ -179,7 +179,7 @@ def handle_keyword(args):
     keyword = args.keyword.strip()
     if not keyword:
         raise ValueError("Keyword cannot be empty.")
-    domain = args.domain.strip()
+    domain = (args.domain or DEFAULT_DOMAIN).strip()
     if not domain:
         raise ValueError("Domain cannot be empty.")
     if args.lowest_price < 0:
