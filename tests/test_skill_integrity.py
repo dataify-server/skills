@@ -207,7 +207,7 @@ class SkillIntegrityTests(unittest.TestCase):
 
     def test_all_catalog_builder_scripts_use_the_shared_completion_runtime(self):
         scripts = list(ROOT.glob("skills/scraper-*/scripts/build-dataify-request.py"))
-        self.assertEqual(8, len(scripts))
+        self.assertEqual(9, len(scripts))
         for script in scripts:
             text = script.read_text(encoding="utf-8")
             self.assertIn("run_catalog_builder", text, script)

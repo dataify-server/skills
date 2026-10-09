@@ -78,5 +78,6 @@
   "serp-google-shopping": "Search Google Shopping for product discovery, offers, and price comparison. Do not use for structured bulk product extraction by keyword.",
   "serp-google-trends": "Search Google Trends for keyword interest and trend data. Do not use for general Google web search.",
   "serp-google-videos": "Search Google Videos for video results. Do not use for YouTube media downloads or structured YouTube records.",
-  "serp-yandex-search": "Run a Yandex web search. Do not use when the user explicitly requests Google, Bing, or DuckDuckGo."
+  "serp-yandex-search": "Run a Yandex web search. Do not use when the user explicitly requests Google, Bing, or DuckDuckGo.",
+  "scraper-chatgpt-answer": "Collect ChatGPT answers for one or more prompts by ChatGPT URL or search term, including answer text, Markdown and raw variants, citations, attached links, the prompt, and its send time. Do not use for general web search, search-engine result pages, or third-party AI chat products."
 }

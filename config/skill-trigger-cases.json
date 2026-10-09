@@ -44,6 +44,7 @@
     {"query": "这个公开网站没有现成采集器，请为产品名称、价格和下一页设计可运行抓取器", "expected": "dataify-scraper-builder", "forbidden": ["dataify-web-unlocker", "dataify-router"]},
     {"query": "审查这段 Dataify API 集成代码的鉴权、重试和异步任务结果处理", "expected": "dataify-api-best-practices", "forbidden": ["dataify-task-operations", "dataify-agent-onboarding"]},
     {"query": "搜索 Google 上的 Dataify 官网", "expected": "dataify-google-search", "forbidden": ["dataify-live-research", "dataify-agent-onboarding"]},
-    {"query": "抓取这个已知网页的 HTML", "expected": "dataify-web-unlocker", "forbidden": ["dataify-scraper-builder", "dataify-seo-audit"]}
+    {"query": "抓取这个已知网页的 HTML", "expected": "dataify-web-unlocker", "forbidden": ["dataify-scraper-builder", "dataify-seo-audit"]},
+    {"query": "采集 ChatGPT 对“什么是MCP协议”这个问题的完整回答和引用来源", "expected": "dataify-chatgpt-answer", "forbidden": ["dataify-google-search", "dataify-competitive-intelligence"]}
   ]
 }

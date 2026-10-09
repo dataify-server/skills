@@ -119,7 +119,7 @@ class NaturalLanguageIssueRegressions(unittest.TestCase):
             output = Path(temp) / "release"
             build.build(output)
             catalogs = sorted(ROOT.glob("skills/*/references/tool-params.json"))
-            self.assertEqual(8, len(catalogs))
+            self.assertEqual(9, len(catalogs))
             for source in catalogs:
                 catalog = output / source.parent.parent.name / "references/tool-params.json"
                 self.assertTrue(catalog.is_file(), catalog)
@@ -127,7 +127,7 @@ class NaturalLanguageIssueRegressions(unittest.TestCase):
 
     def test_catalog_references_are_not_gitignored(self):
         catalogs = sorted(ROOT.glob("skills/*/references/tool-params.json"))
-        self.assertEqual(8, len(catalogs))
+        self.assertEqual(9, len(catalogs))
         completed = subprocess.run(
             ["git", "check-ignore", *[str(path) for path in catalogs]],
             cwd=ROOT,

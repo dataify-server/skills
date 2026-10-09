@@ -3,7 +3,7 @@
 **Unlock the web with AI-powered scraping, search, and structured data extraction**
 
 [![License: MIT](https://img.shields.io/badge/License-MIT-blue.svg)](LICENSE)
-[![Skills](https://img.shields.io/badge/Skills-78-brightgreen.svg)](#skill-catalog)
+[![Skills](https://img.shields.io/badge/Skills-79-brightgreen.svg)](#skill-catalog)
 [![Datasets](https://img.shields.io/badge/Datasets-25+-orange.svg)](#data-sources)
 [![MCP Tools](https://img.shields.io/badge/MCP_Tools-25+-purple.svg)](#mcp-server)
 [![Platforms](https://img.shields.io/badge/Platforms-25+-red.svg)](#skill-catalog)
@@ -348,13 +348,13 @@ Agent workflow:
 
 ## Skill Catalog
 
-### Skills Overview (78)
+### Skills Overview (79)
 
 | Category | Count | Description |
 |----------|-------|-------------|
 | [Web Unlocker](#web-unlocker) | 1 | Bypass bot detection, scrape any webpage |
 | [SERP Skills](#serp-skills) | 25 | Search engine results (Google 17 + Bing 6 + DuckDuckGo + Yandex) |
-| [Scraper Skills](#scraper-skills-37) | 37 | Structured data extraction from 20+ platforms |
+| [Scraper Skills](#scraper-skills-38) | 38 | Structured data extraction from 20+ platforms |
 | [Business Workflows](#business-intelligence) | 5 | Competitive, price, review, lead, and brand decision workflows |
 | [Agent and Developer Workflows](#agent-and-developer-workflows) | 6 | Onboarding, MCP, research, SEO, scraper design, and API guidance |
 | Operations and routing | 4 | Capability routing and asynchronous task status/result handling |
@@ -409,7 +409,7 @@ Structured search engine results across 25 verticals.
 | [serp-duckduckgo-search](skills/serp-duckduckgo-search/) | DuckDuckGo web search |
 | [serp-yandex-search](skills/serp-yandex-search/) | Yandex web search |
 
-### Scraper Skills (37)
+### Scraper Skills (38)
 
 Structured data extraction from 20+ platforms with automatic task monitoring and final-result retrieval by default.
 
@@ -514,6 +514,12 @@ Structured data extraction from 20+ platforms with automatic task monitoring and
 | Skill | Description |
 |-------|-------------|
 | [scraper-airbnb-product-by-searchurl](skills/scraper-airbnb-product-by-searchurl/) | Scrape Airbnb property listings by search URL |
+
+#### AI Answers (1)
+
+| Skill | Description |
+|-------|-------------|
+| [scraper-chatgpt-answer](skills/scraper-chatgpt-answer/) | Collect ChatGPT answers by page URL or search term |
 
 ## Best Practices
 
@@ -697,7 +703,8 @@ dataify_skills/
     ├── scraper-twitter-profile-by-profileurl/
     ├── scraper-github-repository-by-repo-url/         # Scraper — Developer & Apps (2)
     ├── scraper-google-play-store-reviews-by-url/
-    └── scraper-airbnb-product-by-searchurl/           # Scraper — Real Estate (1)
+    ├── scraper-airbnb-product-by-searchurl/           # Scraper — Real Estate (1)
+    └── scraper-chatgpt-answer/                        # Scraper — AI Answers (1)
 ```
 
 ## Examples
