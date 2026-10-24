@@ -30,6 +30,10 @@ def build(output):
             dependencies = target / '_dependencies/skills'
             for name in ('dataify-task-operations','scraper-amazon-comment'):
                 shutil.copytree(ROOT / 'skills' / name, dependencies / name, ignore=shutil.ignore_patterns('__pycache__','*.pyc'))
+    for name in ('INSTALL.md', 'INSTALL.zh-CN.md'):
+        source = ROOT / name
+        if source.is_file():
+            shutil.copy2(source, output / name)
     print(str(output))
 
 if __name__ == '__main__':

@@ -15,7 +15,6 @@
   "dataify-task-result": "Download the JSON result of a completed Dataify scraper task. Use when status is successful or the user asks to retrieve results for a known task ID. Do not use merely to check whether a task is still running.",
   "dataify-task-status": "Check whether a known Dataify scraper task is processing, successful, or failed. Use when the user supplies a task ID and asks for its state. Do not use to submit a scraper or download a completed result.",
   "dataify-web-unlocker": "Fetch HTML or a screenshot from a known blocked or JavaScript-rendered webpage with Dataify Web Unlocker. Use for CAPTCHA-protected, dynamic, or SPA pages. Do not use for search-engine discovery or platform-specific structured records.",
-
   "scraper-airbnb-product-by-searchurl": "Collect structured Airbnb listing results from a known Airbnb search-results URL. Use when the user provides or wants to scrape an Airbnb search URL. Do not use for general hotel discovery or Booking.com URLs.",
   "scraper-amazon-comment": "Collect Amazon product reviews from one or more known product URLs. Use for Amazon review or comment extraction. Do not use for product details, product lists, or seller profiles.",
   "scraper-amazon-global-product": "Collect Amazon global-marketplace products by product URL, category URL, keyword, or keyword plus brand. Use when the request explicitly concerns global or multi-market Amazon product data. Do not use for ordinary single-product ASIN details or keyword-and-domain product lists.",
@@ -53,7 +52,6 @@
   "scraper-youtube-transcript-by-id": "Collect subtitles, captions, or transcript text for a known YouTube video ID. Do not use for video or audio files, metadata, comments, or video discovery.",
   "scraper-youtube-video-by-url": "Download or collect a YouTube video media file from a known video URL. Do not use for metadata, comments, transcripts, channel profiles, or keyword-based video discovery.",
   "scraper-youtube-video-post": "Collect YouTube video-post records by URL, search filters, hashtag, podcast URL, keyword, or Explore URL. Use for video discovery or lists. Do not use to download media files or retrieve only one video's metadata.",
-
   "serp-bing-images": "Search Bing Images for image results. Do not use for Bing web, news, shopping, map, or video results.",
   "serp-bing-maps": "Search Bing Maps for places or map results. Do not use for Bing web search or Google Maps structured details.",
   "serp-bing-news": "Search Bing News for current news results. Do not use for general Bing web search.",
@@ -79,5 +77,8 @@
   "serp-google-trends": "Search Google Trends for keyword interest and trend data. Do not use for general Google web search.",
   "serp-google-videos": "Search Google Videos for video results. Do not use for YouTube media downloads or structured YouTube records.",
   "serp-yandex-search": "Run a Yandex web search. Do not use when the user explicitly requests Google, Bing, or DuckDuckGo.",
-  "scraper-chatgpt-answer": "Collect ChatGPT answers for one or more prompts by ChatGPT URL or search term, including answer text, Markdown and raw variants, citations, attached links, the prompt, and its send time. Do not use for general web search, search-engine result pages, or third-party AI chat products."
+  "scraper-chatgpt-answer": "Collect ChatGPT answers for one or more prompts by ChatGPT URL or search term, including answer text, Markdown and raw variants, citations, attached links, the prompt, and its send time. Do not use for general web search, search-engine result pages, or third-party AI chat products.",
+  "ai-web-search": "Trigger when the user needs AI Web API aggregate search across web, news, shopping, or scholar sources, with optional extraction of result content; when multiple tools are enabled under one product, select tool_code according to the user intent.",
+  "ai-web-map": "Trigger when the user needs to discover page URLs from a public website, map a site, or collect site-wide entry points; when multiple tools are enabled, select tool_code according to the user intent.",
+  "ai-web-extract": "Trigger when the user needs to extract Markdown, raw HTML, clean HTML, or links from a specified public webpage while controlling content filtering, timeout, and wait conditions."
 }

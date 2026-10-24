@@ -57,7 +57,7 @@ class AuditRegressions(unittest.TestCase):
             path=Path(temp)/'config.toml'
             path.write_text('[mcp_servers.other]\nurl="https://other.org"\n')
             m.configure(path,'fake',['user_info'],write=True)
-            value=m.tomllib.loads(path.read_text())
+            value=m.tomllib.loads(path.read_text(encoding="utf-8"))
             self.assertIn('other',value['mcp_servers'])
             self.assertIn('dataify',value['mcp_servers'])
 
@@ -76,10 +76,10 @@ class AuditRegressions(unittest.TestCase):
             args=argparse.Namespace(url='https://example.org/',max_pages=2,output_dir=Path(temp),geography='us',keywords='',dry_run=False)
             with patch.object(m,'token_from_environment',return_value='fake'),patch.object(m,'unlock',side_effect=fetch),patch.object(m,'search',return_value={'ok':False,'status':503,'body':'','error':{'message':'failed'}}),contextlib.redirect_stdout(io.StringIO()):
                 self.assertEqual(2,m.run(args))
-            report=json.loads((Path(temp)/'report.json').read_text())
+            report=json.loads((Path(temp)/'report.json').read_text(encoding="utf-8"))
             self.assertEqual('partial',report['status'])
             self.assertFalse(report['site_findings'])
-            self.assertIn('failed',(Path(temp)/'report.md').read_text())
+            self.assertIn('failed',(Path(temp)/'report.md').read_text(encoding="utf-8"))
 
     def test_builder_submission_not_repeated_on_resume(self):
         m=load('dataify-task-operations','business_workflow.py')

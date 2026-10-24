@@ -19,7 +19,8 @@ ZH_PATTERN = re.compile(
     r"新账号注册即得 \d+ 免费积分"
     r"(?:，约可获得 6000 条试用结果，7 天有效，仅成功请求计费)?。"
 )
-CTA_PATTERN = re.compile(r"\n+## Account CTA policy\n.*?(?=\n## |\Z)", re.DOTALL)
+CTA_PATTERN = re.compile(r"\n+## (?:Account CTA policy|账户 CTA 政策)\n.*?(?=\n## |\Z)", re.DOTALL)
+LOCALIZED_ZH_SKILLS = {"ai-web-search", "ai-web-map", "ai-web-extract"}
 
 
 def load_copy():
@@ -31,7 +32,7 @@ def load_copy():
     copy_en = offer["copy_en"].format(credits=credits)
     copy_zh = offer["copy_zh"].format(credits=credits)
     login_url = offer["login_url"]
-    cta = """
+    cta_en = """
 ## Account CTA policy
 
 - Show a prominent Dataify account CTA only when the API token is missing, rejected/invalid, or the account has insufficient credits.
@@ -42,7 +43,16 @@ def load_copy():
 - For an invalid token, direct the user to API-key management without implying that a new registration is required. For insufficient credits, direct the user to balance or recharge management.
 - During normal submission, processing, and successful completion, do not promote registration or the Dashboard. Never expose the token or include it in CTA attribution parameters.
 """.format(login_url=login_url, copy_en=copy_en).strip()
-    return copy_en, copy_zh, cta
+    cta_zh = """
+## 账户 CTA 政策
+
+- 仅在缺少 API Token、Token 无效或被拒绝，或余额不足时显示账户 CTA。
+- 缺少 Token 时，提供 {login_url}，并说明：{copy_zh} 不要让用户在聊天中粘贴 Token。
+- 检测当前操作系统和 shell，优先显示当前会话的配置命令。永久配置后，提示用户重开终端或重启 Agent。不要建议未被加载的 `.env`。
+- 用户确认已配置 Token 后，只检查 `DATAIFY_API_TOKEN` 是否存在，不要打印其值；验证成功后继续原任务。
+- Token 无效时引导管理 API Key，余额不足时引导充值。不要暴露 Token 或把它加入 CTA 参数。
+""".format(login_url=login_url, copy_zh=copy_zh).strip()
+    return copy_en, copy_zh, cta_en, cta_zh
 
 
 def target_files():
@@ -55,14 +65,16 @@ def target_files():
 
 
 def synchronize(check=False):
-    copy_en, copy_zh, cta = load_copy()
+    copy_en, copy_zh, cta_en, cta_zh = load_copy()
     changed = []
     for path in target_files():
         text = path.read_text(encoding="utf-8")
         updated = EN_PATTERN.sub(copy_en, text)
         updated = ZH_PATTERN.sub(copy_zh, updated)
         if path.name.startswith("SKILL"):
-            if "## Account CTA policy" in updated:
+            localize_zh = path.name.endswith("zh-CN.md") and path.parent.name in LOCALIZED_ZH_SKILLS
+            cta = cta_zh if localize_zh else cta_en
+            if "## Account CTA policy" in updated or "## 账户 CTA 政策" in updated:
                 updated = CTA_PATTERN.sub("\n\n" + cta + "\n", updated)
             else:
                 updated = updated.rstrip() + "\n\n" + cta + "\n"

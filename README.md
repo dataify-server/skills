@@ -3,7 +3,7 @@
 **Unlock the web with AI-powered scraping, search, and structured data extraction**
 
 [![License: MIT](https://img.shields.io/badge/License-MIT-blue.svg)](LICENSE)
-[![Skills](https://img.shields.io/badge/Skills-79-brightgreen.svg)](#skill-catalog)
+[![Skills](https://img.shields.io/badge/Skills-82-brightgreen.svg)](#skill-catalog)
 [![Datasets](https://img.shields.io/badge/Datasets-25+-orange.svg)](#data-sources)
 [![MCP Tools](https://img.shields.io/badge/MCP_Tools-25+-purple.svg)](#mcp-server)
 [![Platforms](https://img.shields.io/badge/Platforms-25+-red.svg)](#skill-catalog)
@@ -40,6 +40,8 @@ curl -fsSL https://raw.githubusercontent.com/dataify-server/skills/main/install.
 ```
 
 The installer will clone the repo, prompt for your API token, and configure your shell environment.
+
+Detailed setup and AI Web usage guide: [English](INSTALL.md) | [简体中文](INSTALL.zh-CN.md)
 
 ### 2. Set Your API Token
 
@@ -348,7 +350,7 @@ Agent workflow:
 
 ## Skill Catalog
 
-### Skills Overview (79)
+### Skills Overview (82)
 
 | Category | Count | Description |
 |----------|-------|-------------|

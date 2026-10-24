@@ -11,7 +11,7 @@ Translate the user's outcome into a capability plan, then invoke the minimum req
 
 1. Restate the desired deliverable, target sources, scope, freshness, and output format.
 2. Select capabilities from `references/capability-map.md`.
-3. Prefer a synchronous SERP or Web Unlocker call for discovery. Use Builder scrapers when structured platform data is required.
+3. Prefer a synchronous SERP, AI Web API search, AI Web API map, AI Web API extract, or Web Unlocker call when it directly matches the requested output. Use Builder scrapers when structured platform data is required.
 4. Ask only for missing required inputs. Do not ask for fields that have safe documented defaults.
 5. Confirm only for high-volume, multi-page, media-download, irreversible, or materially credit-sensitive work. A clear scoped request such as “直接执行” counts as confirmation. Use safe defaults and proceed without an extra confirmation turn for clear low-cost read-only work.
 6. Never expose an API token in commands or output. Read `DATAIFY_API_TOKEN` from the environment.

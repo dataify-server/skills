@@ -45,6 +45,10 @@
     {"query": "审查这段 Dataify API 集成代码的鉴权、重试和异步任务结果处理", "expected": "dataify-api-best-practices", "forbidden": ["dataify-task-operations", "dataify-agent-onboarding"]},
     {"query": "搜索 Google 上的 Dataify 官网", "expected": "dataify-google-search", "forbidden": ["dataify-live-research", "dataify-agent-onboarding"]},
     {"query": "抓取这个已知网页的 HTML", "expected": "dataify-web-unlocker", "forbidden": ["dataify-scraper-builder", "dataify-seo-audit"]},
-    {"query": "采集 ChatGPT 对“什么是MCP协议”这个问题的完整回答和引用来源", "expected": "dataify-chatgpt-answer", "forbidden": ["dataify-google-search", "dataify-competitive-intelligence"]}
+    {"query": "采集 ChatGPT 对“什么是MCP协议”这个问题的完整回答和引用来源", "expected": "dataify-chatgpt-answer", "forbidden": ["dataify-google-search", "dataify-competitive-intelligence"]},
+    {"query": "调用 AI Web API 的 web search 搜索 AI 最新资讯", "expected": "ai-web-search", "forbidden": ["dataify-google-search", "ai-web-map", "ai-web-extract"]},
+    {"query": "调用 AI Web API 的 search 接口搜索 OpenAI 最新消息", "expected": "ai-web-search", "forbidden": ["dataify-google-search", "dataify-live-research", "ai-web-map"]},
+    {"query": "用 AI Web API map 接口发现这个网站的页面地址", "expected": "ai-web-map", "forbidden": ["ai-web-search", "ai-web-extract", "dataify-scraper-builder"]},
+    {"query": "用 AI Web API extract 接口提取这个页面的 Markdown", "expected": "ai-web-extract", "forbidden": ["dataify-web-unlocker", "ai-web-search", "ai-web-map"]}
   ]
 }

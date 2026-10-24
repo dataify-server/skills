@@ -121,10 +121,11 @@ def remove_legacy_mandates(text):
 
 def insert_policy(text, section, chinese=False):
     text = (ZH_SECTION if chinese else EN_SECTION).sub("", text).rstrip()
-    marker = "\n## Account CTA policy"
-    if marker in text:
-        before, after = text.split(marker, 1)
-        return before.rstrip() + "\n\n" + section + "\n\n## Account CTA policy" + after.rstrip() + "\n"
+    markers = ("\n## 账户 CTA 政策", "\n## Account CTA policy") if chinese else ("\n## Account CTA policy", "\n## 账户 CTA 政策")
+    for marker in markers:
+        if marker in text:
+            before, after = text.split(marker, 1)
+            return before.rstrip() + "\n\n" + section + "\n\n" + marker.lstrip("\n") + after.rstrip() + "\n"
     return text + "\n\n" + section + "\n"
 
 

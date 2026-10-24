@@ -1,3 +1,5 @@
+.pytest_cache/
+dist/
 *.zip
 *.ps1
 *.json
