@@ -138,7 +138,6 @@ python3 "$DATAIFY_SKILLS_DIR/skills/ai-web-map/scripts/map.py" \
 
 Common options: `--country US`, `--domain-filter domain|all`, `--limit`, `--sitemap skip|include|only`.
 
-Use `--sitemap include` or `--sitemap skip`. Production testing found `--sitemap only` intermittently returns HTTP 500.
 
 ## Suggested first run
 

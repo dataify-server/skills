@@ -138,7 +138,6 @@ python3 "$DATAIFY_SKILLS_DIR/skills/ai-web-map/scripts/map.py" \
 
 常用参数：`--country US`、`--domain-filter domain|all`、`--limit`、`--sitemap skip|include|only`。
 
-请使用 `--sitemap include` 或 `--sitemap skip`。正式环境测试发现 `--sitemap only` 会间歇性返回 HTTP 500。
 
 ## 建议首次运行
 
