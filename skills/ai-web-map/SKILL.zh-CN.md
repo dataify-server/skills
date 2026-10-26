@@ -27,8 +27,6 @@ python3 scripts/map.py --url "https://docs.example.com" --limit 100
 - `--limit`：1～100000，默认 5000。
 - `--sitemap`：`skip`、`include`、`only`，默认 `include`。
 
-正式环境测试发现 `--sitemap only` 会间歇性返回 HTTP 500；请优先使用 `include` 或 `skip`。
-
 脚本会提前拒绝 URL 用户信息、本地主机以及私有、回环、链路本地或保留 IP。
 
 ## 返回与计费

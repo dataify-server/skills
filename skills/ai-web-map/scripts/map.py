@@ -46,8 +46,6 @@ def main():
             emit_dry_run("/map", payload, base_url, token); return 0
         if not token:
             print("DATAIFY_API_TOKEN is not set. Configure it before calling the AI Web API.", file=sys.stderr); return 1
-        if args.sitemap == "only":
-            print("Warning: sitemap=only is unstable and may return HTTP 500; prefer --sitemap include.", file=sys.stderr)
         return post_json("/map", payload, base_url, token, args.request_timeout)
     except ValueError as exc:
         parser.error(str(exc))

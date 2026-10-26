@@ -31,7 +31,6 @@ python3 scripts/map.py --url "https://docs.example.com" --limit 100
 | `--limit` | No | 1 to 100000; default 5000. |
 | `--sitemap` | No | `skip`, `include`, or `only`; default `include`. |
 
-Production testing found intermittent HTTP 500 responses for `--sitemap only`. Prefer `--sitemap include` or `--sitemap skip` until upstream is fixed.
 
 The wrapper rejects URL credentials, local hosts, and private, loopback, link-local, or reserved IPs before sending.
 
