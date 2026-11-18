@@ -66,6 +66,19 @@ class AIWebSkillTests(unittest.TestCase):
         payload = extract.build_payload(args)
         self.assertEqual(['markdown', 'links'], payload['formats'])
 
+    def test_request_source_is_skills_for_all_ai_web_tools(self):
+        search = load('ai_web_search_request_source_test', ROOT / 'skills/ai-web-search/scripts/search.py')
+        extract = load('ai_web_extract_request_source_test', ROOT / 'skills/ai-web-extract/scripts/extract.py')
+        map_module = load('ai_web_map_request_source_test', ROOT / 'skills/ai-web-map/scripts/map.py')
+
+        search_args = search.build_parser().parse_args(['web', '--query', 'AI news'])
+        extract_args = extract.build_parser().parse_args(['--url', 'https://example.com'])
+        map_args = map_module.build_parser().parse_args(['--url', 'https://example.com'])
+
+        self.assertEqual('skills', search.build_payload(search_args)['request_source'])
+        self.assertEqual('skills', extract.build_payload(extract_args)['request_source'])
+        self.assertEqual('skills', map_module.build_payload(map_args)['request_source'])
+
 
 if __name__ == '__main__':
     unittest.main()
